@@ -10,7 +10,7 @@ module Aserto
         if defined? ::Rails
           require "aserto/rails/utils"
 
-          route = Aserto::Rails::Utils.route(request.path)
+          route = Aserto::Rails::Utils.route(path)
           path = route[:path] if route
         end
 

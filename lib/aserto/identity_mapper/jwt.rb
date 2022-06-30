@@ -14,7 +14,7 @@ module Aserto
           return {} unless valid?(auth_token)
 
           {
-            type: INTERNAL_MAPPING[:jwt],
+            type: :jwt,
             identity: auth_token
           }
         end

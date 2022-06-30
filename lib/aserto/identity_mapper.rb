@@ -13,8 +13,6 @@ module Aserto
       jwt: Aserto::IdentityMapper::Jwt
     }.freeze
 
-    private_constant :STRATEGY
-
     class << self
       def execute(request)
         STRATEGY[

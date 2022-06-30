@@ -45,7 +45,7 @@ module Aserto
     # implementation for the ResourceMapper
     #
     # Aserto.with_resource_mapper do |request|
-    #   "resource => #{request}"
+    #   { resource:  request.path_info }
     # end
     def with_resource_mapper
       Aserto::ResourceMapper.class_eval do |klass|
@@ -61,7 +61,7 @@ module Aserto
     # Aserto.with_identity_mapper do |request|
     #   {
     #     sub: "test",
-    #     type: 1
+    #     type: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE
     #   }
     # end
     def with_identity_mapper

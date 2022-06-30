@@ -6,6 +6,15 @@ module Aserto
   class AuthClient
     attr_reader :client, :config, :request
 
+    INTERNAL_MAPPING = {
+      unknown: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_UNKNOWN,
+      none: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE,
+      sub: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_SUB,
+      jwt: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_JWT
+    }.freeze
+
+    private_constant :INTERNAL_MAPPING
+
     def initialize(request)
       @request = request
       @config = Aserto.config
@@ -59,7 +68,7 @@ module Aserto
       Aserto::Api::V1::IdentityContext.new(
         {
           identity: identity.fetch(:identity, "null"),
-          type: identity.fetch(:type, Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE)
+          type: INTERNAL_MAPPING[identity.fetch(:type, :unknown)]
         }
       )
     end

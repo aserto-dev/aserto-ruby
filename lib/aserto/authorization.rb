@@ -8,8 +8,6 @@ module Aserto
       @app = app
       @config = Aserto.config(options)
       yield @config if block_given?
-
-      Aserto::Config.validate!
     end
 
     def call(env)

@@ -15,7 +15,7 @@ module Aserto
           data = extract_data(auth_token) || {}
 
           {
-            type: INTERNAL_MAPPING[:sub],
+            type: :sub,
             identity: data[config.identity_mapping[:from].to_s]
           }
         end
