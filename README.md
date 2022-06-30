@@ -39,7 +39,7 @@ The following configuration settings are required for the authorization middlewa
 | decision | "allowed" | The decision that will be used by the middleware when creating an authorizer request. |
 | logger | $stdout logger | The logger to be used by the middleware. |
 | identity_mapping | `{ type: :none }` | The strategy for retrieveing the identity, possible values: `:jwt, :sub, :none` |
-| disabled_for | [] | Which controller and actions to skip the authorization for. |
+| disabled_for | `[]` | Which controller and actions to skip the authorization for. |
 
 ## Identity
 To determine the identity of the user, the middleware can be configured to use a JWT token or a claim using the `identity_mapping` config.
@@ -50,7 +50,8 @@ config.identity_mapping = {
   from: 'my-auth-header',
 }
 
-# configure the middleware to use a claim from the JWT token. This will decode the JWT token and extract the `sub` field from payload.
+# configure the middleware to use a claim from the JWT token.
+# This will decode the JWT token and extract the `sub` field from payload.
 config.identity_mapping = {
   type: :sub,
   from: :sub,
