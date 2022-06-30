@@ -14,10 +14,11 @@ module Aserto
       request = Rack::Request.new(env)
 
       allowed = if enabled?(request)
-                  Aserto.logger.debug("Authorization enabled")
-                  client = AuthClient.new(request)
+                  Aserto.logger.debug("Aserto authorization enabled")
+                  client = Aserto::AuthClient.new(request)
                   client.is
                 else
+                  Aserto.logger.debug("Aserto authorization not enabled")
                   true
                 end
 
@@ -38,7 +39,7 @@ module Aserto
       if defined? ::Rails
         require "aserto/rails/utils"
 
-        path = Rails::Utils.route(request.path_info)
+        path = Aserto::Rails::Utils.route(request.path_info)
 
         config.enabled && config.disabled_for.none? do |hash|
           hash[:controller] == path[:controller] && hash[:actions].include?(path[:action].to_sym)

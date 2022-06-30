@@ -43,16 +43,15 @@ module Aserto
       rescue GRPC::BadStatus
         false
       end
-      allowed = response.to_h.dig(:decisions, 0, :is) || false
-      Aserto.logger.debug "ALLOWED: #{allowed}"
-      allowed
+      response.to_h.dig(:decisions, 0, :is) || false
     end
 
     private
 
     def policy_context
-      path = PolicyPathMapper.execute(config.policy_root, request)
-      Aserto.logger.debug PATH: path
+      path = Aserto::PolicyPathMapper.execute(config.policy_root, request)
+      Aserto.logger.debug "aserto authorizing: #{path}"
+
       Aserto::Api::V1::PolicyContext.new(
         {
           id: config.policy_id,
@@ -63,8 +62,7 @@ module Aserto
     end
 
     def identity_context
-      identity = IdentityMapper.execute(request)
-      puts ID: identity
+      identity = Aserto::IdentityMapper.execute(request)
       Aserto::Api::V1::IdentityContext.new(
         {
           identity: identity.fetch(:identity, "null"),
