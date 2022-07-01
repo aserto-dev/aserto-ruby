@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module Aserto
-  module Rails
+  module Sinatra
     module Utils
       class << self
-        # Finds the Rails route for the given path.
+        # Finds the Sinatra route for the given path.
         # If the route is not found, returns nil.
         # If the route is found, returns a hash with the following keys:
         # :path
@@ -15,17 +15,24 @@ module Aserto
         #   :action => :GET,
         #   :path => "/api/v1/users/:id" }
         def route(request)
-          return unless defined? ::Rails
+          return unless defined? ::Sinatra
 
           path = request.path_info
-          route = ::Rails.application.routes.routes.to_a.find do |cr|
-            cr.path.to_regexp.match?(path)
+          routes = ::Sinatra::Application.routes[request.request_method].map do |route|
+            route.flatten.first
+          end
+          route = routes.find do |r|
+            r.match(path)
           end
 
           return unless route
 
+          substitutions = route.match(path).named_captures
+          substitutions.each_pair do |sub, val|
+            path.sub!(val, ":#{sub}")
+          end
           {
-            path: route.path.spec.to_s.sub("(.:format)", ""),
+            path: path,
             action: request.request_method.to_sym
           }
         end

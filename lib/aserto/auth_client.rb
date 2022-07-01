@@ -7,10 +7,10 @@ module Aserto
     attr_reader :client, :config, :request
 
     INTERNAL_MAPPING = {
-      unknown: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_UNKNOWN,
-      none: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE,
-      sub: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_SUB,
-      jwt: ::Aserto::Api::V1::IdentityType::IDENTITY_TYPE_JWT
+      unknown: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_UNKNOWN,
+      none: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE,
+      sub: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_SUB,
+      jwt: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_JWT
     }.freeze
 
     private_constant :INTERNAL_MAPPING
@@ -40,7 +40,8 @@ module Aserto
             authorization: "basic #{config.authorizer_api_key}"
           } }
         )
-      rescue GRPC::BadStatus
+      rescue GRPC::BadStatus => e
+        Aserto.logger.error(e.inspect)
         false
       end
       response.to_h.dig(:decisions, 0, :is) || false

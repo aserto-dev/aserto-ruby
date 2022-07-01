@@ -35,14 +35,22 @@ module Aserto
 
     private
 
+    def route(request)
+      @route ||= if defined? ::Rails
+                   require "aserto/rails/utils"
+
+                   Aserto::Rails::Utils.route(request)
+                 elsif defined? ::Sinatra
+                   require "aserto/sinatra/utils"
+                   Aserto::Sinatra::Utils.route(request)
+                 end
+    end
+
     def enabled?(request)
-      if defined? ::Rails
-        require "aserto/rails/utils"
-
-        path = Aserto::Rails::Utils.route(request.path_info)
-
+      route_info = route(request)
+      if route_info
         config.enabled && config.disabled_for.none? do |hash|
-          hash[:controller] == path[:controller] && hash[:actions].include?(path[:action].to_sym)
+          hash[:path] == route_info[:path] && hash[:actions].include?(route_info[:action])
         end
       else
         config.enabled

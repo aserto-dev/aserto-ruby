@@ -27,7 +27,7 @@ module Aserto
       authorizer_api_key: "",
       authorizer_url: "authorizer.eng.aserto.com:8443",
       decision: "allowed",
-      disabled_for: [],
+      disabled_for: [{}],
       enabled: true,
       identity_mapping: {
         type: :none
