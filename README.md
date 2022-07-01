@@ -104,13 +104,14 @@ Aserto.with_resource_mapper do |request|
 end
 ```
 
-## Disabling authorization for specific paths
-### Rails
+## Disable authorization for specific paths
+
 The middleware expose a `disable_for` configuration option that
 accepts and array of hashes with the following keys:
  - path - the path to disable authorization for
  - actions - an array of actions to disable authorization for
-
+ 
+ ### Rails
  You can find the paths and actions using `bundle exec rails routes`
  ```
  ❯ bundle exec rails routes
