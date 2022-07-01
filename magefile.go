@@ -61,3 +61,11 @@ func Push() error {
 
 	return sh.RunV("gem", "push", fmt.Sprintf("./build/%s-%s.gem", gemName, version))
 }
+
+func Release() error {
+	err := Build()
+	if err != nil {
+		return err
+	}
+	return Push()
+}
