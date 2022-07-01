@@ -28,6 +28,13 @@ module Aserto
           return unless route
 
           substitutions = route.match(path).named_captures
+          unless substitutions&.any?
+            return {
+              path: route.to_s,
+              action: request.request_method.to_sym
+            }
+          end
+
           substitutions.each_pair do |sub, val|
             path.sub!(val, ":#{sub}")
           end

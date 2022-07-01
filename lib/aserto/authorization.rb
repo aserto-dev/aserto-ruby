@@ -36,14 +36,14 @@ module Aserto
     private
 
     def route(request)
-      @route ||= if defined? ::Rails
-                   require "aserto/rails/utils"
+      if defined? ::Rails
+        require "aserto/rails/utils"
 
-                   Aserto::Rails::Utils.route(request)
-                 elsif defined? ::Sinatra
-                   require "aserto/sinatra/utils"
-                   Aserto::Sinatra::Utils.route(request)
-                 end
+        Aserto::Rails::Utils.route(request)
+      elsif defined? ::Sinatra
+        require "aserto/sinatra/utils"
+        Aserto::Sinatra::Utils.route(request)
+      end
     end
 
     def enabled?(request)
