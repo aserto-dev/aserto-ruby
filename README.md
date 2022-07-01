@@ -115,7 +115,9 @@ accepts and array of hashes with the following keys:
  You can find the paths and actions using `bundle exec rails routes`
  ```
  ❯ bundle exec rails routes
-
+  
+  Prefix       Verb   URI Pattern               Controller#Action
+  
   api_v1_users GET    /api/users(.:format)      api/v1/users#index {:format=>:json}
                POST   /api/users(.:format)      api/v1/users#create {:format=>:json}
   api_v1_user  GET    /api/users/:id(.:format)  api/v1/users#show {:format=>:json}
