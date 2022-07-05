@@ -28,7 +28,7 @@ The following configuration settings are required for the authorization middlewa
  - authorizer_api_key
  - policy_root
 
- This settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
+ These settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
 
  The middleware accepts the following optional parameters:
 
@@ -107,8 +107,8 @@ end
 
 ## Disable authorization for specific paths
 
-The middleware expose a `disable_for` configuration option that
-accepts and array of hashes with the following keys:
+The middleware exposes a `disable_for` configuration option that
+accepts an array of hashes with the following keys:
  - path - the path to disable authorization for
  - actions - an array of actions to disable authorization for
 
@@ -160,7 +160,7 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
       actions: %i[POST]
     }
   ]
-  config.on_failure: lambda do |env|
+  config.on_failure = lambda do |env|
     puts env
     return [403, {}, ["Forbidden"]]
   end
@@ -184,5 +184,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/aserto
 ## License
 
 The gem is available as open source under the terms of the [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
-
-
