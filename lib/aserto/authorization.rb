@@ -22,15 +22,10 @@ module Aserto
                   true
                 end
 
-      if allowed
-        status, headers, body = @app.call env
-      else
-        status = 403
-        body = [{ message: "not allowed by aserto" }.to_json]
-        headers = {}
-      end
+      Aserto.logger.debug("Aserto authorization result -> allowed: #{allowed}")
+      return @app.call env if allowed
 
-      [status, headers.merge({ "aserto-grpc-authz" => ::Aserto::Grpc::Authz::VERSION }), body]
+      config.on_failure.call(env)
     end
 
     private

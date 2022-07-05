@@ -40,6 +40,7 @@ The following configuration settings are required for the authorization middlewa
 | logger | $stdout logger | The logger to be used by the middleware. |
 | identity_mapping | `{ type: :none }` | The strategy for retrieveing the identity, possible values: `:jwt, :sub, :none` |
 | disabled_for | `[{}]` | Which path and actions to skip the authorization for. |
+| on_failure | `-> { return [403, {}, ["Forbidden"]] }`| A lambda that is executed when the authorization fails. |
 
 ## Identity
 To determine the identity of the user, the middleware can be configured to use a JWT token or a claim using the `identity_mapping` config.
@@ -110,14 +111,14 @@ The middleware expose a `disable_for` configuration option that
 accepts and array of hashes with the following keys:
  - path - the path to disable authorization for
  - actions - an array of actions to disable authorization for
- 
+
  ### Rails
  You can find the paths and actions using `bundle exec rails routes`
  ```
  ❯ bundle exec rails routes
-  
+
   Prefix       Verb   URI Pattern               Controller#Action
-  
+
   api_v1_users GET    /api/users(.:format)      api/v1/users#index {:format=>:json}
                POST   /api/users(.:format)      api/v1/users#create {:format=>:json}
   api_v1_user  GET    /api/users/:id(.:format)  api/v1/users#show {:format=>:json}
@@ -159,6 +160,10 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
       actions: %i[POST]
     }
   ]
+  config.on_failure: lambda do |env|
+    puts env
+    return [403, {}, ["Forbidden"]]
+  end
 end
 ```
 

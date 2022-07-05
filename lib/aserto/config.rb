@@ -35,7 +35,10 @@ module Aserto
       logger: Config.default_logger,
       policy_id: "",
       policy_root: "",
-      tenant_id: ""
+      tenant_id: "",
+      on_failure: lambda do |_env|
+        return [403, {}, ["Forbidden"]]
+      end
     }.freeze
 
     OPTIONS = DEFAULT_ATTRS.keys.freeze
