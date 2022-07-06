@@ -25,7 +25,7 @@ module Aserto
       Aserto.logger.debug("Aserto authorization result -> allowed: #{allowed}")
       return @app.call env if allowed
 
-      config.on_failure.call(env)
+      config.on_unauthorized.call(env)
     end
 
     private

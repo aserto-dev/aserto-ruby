@@ -36,7 +36,7 @@ module Aserto
       policy_id: "",
       policy_root: "",
       tenant_id: "",
-      on_failure: lambda do |_env|
+      on_unauthorized: lambda do |_env|
         return [403, {}, ["Forbidden"]]
       end
     }.freeze
