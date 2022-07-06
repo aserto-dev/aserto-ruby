@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
 
   # development dependencies
   spec.add_development_dependency("bundler", ">= 1.15.0", "< 3.0")
+  spec.add_development_dependency "codecov", "~> 0.6"
   spec.add_development_dependency "grpc_mock", "~> 0.4"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rubocop-performance", "~> 1.14"

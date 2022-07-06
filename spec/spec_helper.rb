@@ -7,6 +7,12 @@ require "rack"
 
 require "aserto"
 
+require "simplecov"
+SimpleCov.start do
+  enable_coverage :branch
+  track_files "lib/**/*.rb"
+end
+
 GrpcMock.disable_net_connect!
 
 RSpec.configure do |config|
