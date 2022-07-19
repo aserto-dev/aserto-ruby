@@ -3,13 +3,13 @@
 require "rack"
 require "aserto-grpc-authz"
 
-require "aserto/version"
-require "aserto/config"
-require "aserto/authorization"
-require "aserto/policy_path_mapper"
-require "aserto/identity_mapper"
-require "aserto/resource_mapper"
-require "aserto/auth_client"
+require_relative "aserto/version"
+require_relative "aserto/config"
+require_relative "aserto/authorization"
+require_relative "aserto/policy_path_mapper"
+require_relative "aserto/identity_mapper"
+require_relative "aserto/resource_mapper"
+require_relative "aserto/auth_client"
 
 module Aserto
   class << self

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "aserto/identity_mapper/base"
-require "aserto/identity_mapper/none"
-require "aserto/identity_mapper/sub"
-require "aserto/identity_mapper/jwt"
+require_relative "identity_mapper/base"
+require_relative "identity_mapper/none"
+require_relative "identity_mapper/sub"
+require_relative "identity_mapper/jwt"
 
 module Aserto
   module IdentityMapper
