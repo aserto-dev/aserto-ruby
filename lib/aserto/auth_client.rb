@@ -19,7 +19,7 @@ module Aserto
       @request = request
       @config = Aserto.config
       @client = Aserto::Authorizer::Authorizer::V1::Authorizer::Stub.new(
-        config.authorizer_url,
+        config.service_url,
         GRPC::Core::ChannelCredentials.new
       )
     end

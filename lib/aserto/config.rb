@@ -25,7 +25,7 @@ module Aserto
 
     DEFAULT_ATTRS = {
       authorizer_api_key: "",
-      authorizer_url: "authorizer.eng.aserto.com:8443",
+      service_url: "authorizer.prod.aserto.com:8443",
       decision: "allowed",
       disabled_for: [{}],
       enabled: true,
@@ -44,7 +44,7 @@ module Aserto
     OPTIONS = DEFAULT_ATTRS.keys.freeze
 
     REQUIRED_OPTIONS = OPTIONS - %i[
-      authorizer_url decision disabled_for identity_mapping enabled logger
+      service_url decision disabled_for identity_mapping enabled logger
     ].freeze
 
     private_constant :DEFAULT_ATTRS, :OPTIONS, :REQUIRED_OPTIONS

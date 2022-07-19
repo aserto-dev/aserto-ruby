@@ -7,19 +7,20 @@
 * An [Aserto](https://console.aserto.com) account.
 
 ## Installation
-Add to your application's Gemfile:
+Add to your application Gemfile:
 
 ```ruby
-gem 'aserto'
+gem "aserto"
 ```
 
 And then execute:
-
-    $ bundle install
-
+```bash
+bundle install
+```
 Or install it yourself as:
-
-    $ gem install aserto
+```bash
+gem install aserto
+```
 
 ## Configuration
 The following configuration settings are required for the authorization middleware:
@@ -28,16 +29,16 @@ The following configuration settings are required for the authorization middlewa
  - authorizer_api_key
  - policy_root
 
- These settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
+These settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
 
- The middleware accepts the following optional parameters:
+The middleware accepts the following optional parameters:
 
 | Parameter name | Default value | Description |
 | -------------- | ------------- | ----------- |
 | enabled | true | Enables or disables Aserto Authorization |
-| service_url | "https://authorizer.prod.aserto.com:8443" | Sets the URL for the authorizer endpoint. |
-| decision | "allowed" | The decision that will be used by the middleware when creating an authorizer request. |
-| logger | $stdout logger | The logger to be used by the middleware. |
+| service_url | `"authorizer.prod.aserto.com:8443"` | Sets the URL for the authorizer endpoint. |
+| decision | `"allowed"` | The decision that will be used by the middleware when creating an authorizer request. |
+| logger | `STDOUT` | The logger to be used by the middleware. |
 | identity_mapping | `{ type: :none }` | The strategy for retrieveing the identity, possible values: `:jwt, :sub, :none` |
 | disabled_for | `[{}]` | Which path and actions to skip the authorization for. |
 | on_unauthorized | `-> { return [403, {}, ["Forbidden"]] }`| A lambda that is executed when the authorization fails. |
@@ -48,9 +49,10 @@ To determine the identity of the user, the middleware can be configured to use a
 # configure the middleware to use a JWT token form the `my-auth-header` header.
 config.identity_mapping = {
   type: :jwt,
-  from: 'my-auth-header',
+  from: "my-auth-header",
 }
-
+```
+```ruby
 # configure the middleware to use a claim from the JWT token.
 # This will decode the JWT token and extract the `sub` field from payload.
 config.identity_mapping = {
@@ -60,9 +62,9 @@ config.identity_mapping = {
 ```
 
 The whole identity resolution can be overwritten by providing a custom function.
-
 ```ruby
 # config/initializers/aserto.rb
+
 # needs to return a hash with the identity having `type` and `identity` keys.
 # supported types: `:jwt, :sub, :none`
 Aserto.with_identity_mapper do |request|
@@ -83,6 +85,7 @@ This behavior can be overwritten by providing a custom function:
 
 ```ruby
 # config/initializers/aserto.rb
+
 # must return a String
 Aserto.with_policy_path_mapper do |policy_root, request|
   method = request.request_method
@@ -99,6 +102,7 @@ This behavior can be overwritten by providing a custom function:
 
 ```ruby
 # config/initializers/aserto.rb
+
 # must return a Hash
 Aserto.with_resource_mapper do |request|
   { resource:  request.path_info }
@@ -112,17 +116,17 @@ accepts an array of hashes with the following keys:
  - path - the path to disable authorization for
  - actions - an array of actions to disable authorization for
 
- ### Rails
- You can find the paths and actions using `bundle exec rails routes`
- ```
- ❯ bundle exec rails routes
+### Rails
+You can find the paths and actions using `bundle exec rails routes`
+```bash
+bundle exec rails routes
 
   Prefix       Verb   URI Pattern               Controller#Action
 
   api_v1_users GET    /api/users(.:format)      api/v1/users#index {:format=>:json}
                POST   /api/users(.:format)      api/v1/users#create {:format=>:json}
   api_v1_user  GET    /api/users/:id(.:format)  api/v1/users#show {:format=>:json}
- ```
+```
 ```ruby
 # disables get user by id
 config.disabled_for = [
@@ -133,6 +137,7 @@ config.disabled_for = [
 ]
 ```
 ## Examples
+
 ### Rails
 ```ruby
 # config/initializers/aserto.rb
@@ -143,7 +148,7 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
   config.tenant_id = "my-tenant-id"
   config.authorizer_api_key = Rails.application.credentials.aserto[:authorizer_api_key]
   config.policy_root = "peoplefinder"
-  config.authorizer_url = "authorizer.eng.aserto.com:8443"
+  config.service_url = "authorizer.prod.aserto.com:8443"
   config.decision = "allowed"
   config.logger = Rails.logger
   config.identity_mapping = {
@@ -167,6 +172,32 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
 end
 ```
 
+### Sinatra
+```ruby
+# server.rb
+
+# aserto middleware
+use Aserto::Authorization do |config|
+  config.enabled = true
+  config.policy_id = "my-policy-id"
+  config.tenant_id = "my-tenant-id"
+  config.authorizer_api_key = ENV['authorizer_api_key']
+  config.policy_root = "peoplefinder"
+  config.service_url = "authorizer.prod.aserto.com:8443"
+  config.decision = "allowed"
+  config.disabled_for = [
+    {
+      path: "/api/users/:id",
+      actions: %i[GET]
+    },
+    {
+      path: "/",
+      actions: %i[GET]
+    }
+  ]
+
+end
+```
 ## Development
 Prerequisites:
 
