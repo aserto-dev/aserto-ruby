@@ -2,6 +2,10 @@
 
 require "aserto-grpc-authz"
 
+require_relative "identity_mapper"
+require_relative "policy_path_mapper"
+require_relative "resource_mapper"
+
 module Aserto
   class AuthClient
     attr_reader :client, :config, :request

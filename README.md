@@ -1,5 +1,10 @@
 # Ruby Rack Middleware for Aserto
 
+[![Gem Version](https://badge.fury.io/rb/aserto.svg)](https://badge.fury.io/rb/aserto)
+[![ci](https://github.com/aserto-dev/aserto-ruby/actions/workflows/ci.yaml/badge.svg)](https://github.com/aserto-dev/aserto-ruby/actions/workflows/ci.yaml)
+[![slack](https://img.shields.io/badge/slack-Aserto%20Community-brightgreen)](https://asertocommunity.slack.com
+)
+
 `Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
 
 ## Prerequisites
@@ -39,14 +44,14 @@ The middleware accepts the following optional parameters:
 | service_url | `"authorizer.prod.aserto.com:8443"` | Sets the URL for the authorizer endpoint. |
 | decision | `"allowed"` | The decision that will be used by the middleware when creating an authorizer request. |
 | logger | `STDOUT` | The logger to be used by the middleware. |
-| identity_mapping | `{ type: :none }` | The strategy for retrieveing the identity, possible values: `:jwt, :sub, :none` |
+| identity_mapping | `{ type: :none }` | The strategy for retrieving the identity, possible values: `:jwt, :sub, :none` |
 | disabled_for | `[{}]` | Which path and actions to skip the authorization for. |
 | on_unauthorized | `-> { return [403, {}, ["Forbidden"]] }`| A lambda that is executed when the authorization fails. |
 
 ## Identity
 To determine the identity of the user, the middleware can be configured to use a JWT token or a claim using the `identity_mapping` config.
 ```ruby
-# configure the middleware to use a JWT token form the `my-auth-header` header.
+# configure the middleware to use a JWT token from the `my-auth-header` header.
 config.identity_mapping = {
   type: :jwt,
   from: "my-auth-header",
@@ -54,7 +59,7 @@ config.identity_mapping = {
 ```
 ```ruby
 # configure the middleware to use a claim from the JWT token.
-# This will decode the JWT token and extract the `sub` field from payload.
+# This will decode the JWT token and extract the `sub` field from the payload.
 config.identity_mapping = {
   type: :sub,
   from: :sub,
@@ -81,7 +86,7 @@ By default, when computing the policy path, the middleware:
 * converts any character that is not alpha, digit, dot or underscore to underscore
 * converts uppercase characters in the URL path to lowercases
 
-This behavior can be overwritten by providing a custom function:
+This behaviour can be overwritten by providing a custom function:
 
 ```ruby
 # config/initializers/aserto.rb
@@ -96,9 +101,9 @@ end
 ```
 
 ## Resource
-A resource can be any structured data that the authorization policy uses to evaluate decisions. By default, middleware do not include a resource in authorization calls.
+A resource can be any structured data that the authorization policy uses to evaluate decisions. By default, middleware does not include a resource in authorization calls.
 
-This behavior can be overwritten by providing a custom function:
+This behaviour can be overwritten by providing a custom function:
 
 ```ruby
 # config/initializers/aserto.rb
