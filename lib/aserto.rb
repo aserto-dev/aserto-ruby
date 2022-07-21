@@ -10,6 +10,7 @@ require_relative "aserto/policy_path_mapper"
 require_relative "aserto/identity_mapper"
 require_relative "aserto/resource_mapper"
 require_relative "aserto/auth_client"
+require_relative "aserto/errors"
 
 module Aserto
   class << self
@@ -61,7 +62,7 @@ module Aserto
     # Aserto.with_identity_mapper do |request|
     #   {
     #     sub: "test",
-    #     type: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE
+    #     type: :none
     #   }
     # end
     def with_identity_mapper
