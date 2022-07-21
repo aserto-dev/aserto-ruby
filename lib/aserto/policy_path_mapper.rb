@@ -8,14 +8,14 @@ module Aserto
         path = request.path_info
 
         if defined? ::Rails
-          require "aserto/rails/utils"
+          require_relative "rails/utils"
 
           route = Aserto::Rails::Utils.route(request)
           path = route[:path] if route
         end
 
         if defined? ::Sinatra
-          require "aserto/sinatra/utils"
+          require_relative "sinatra/utils"
 
           route = Aserto::Sinatra::Utils.route(request)
           path = route[:path] if route
