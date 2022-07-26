@@ -29,17 +29,27 @@ module Aserto
     end
 
     def is
-      is_request = Aserto::Authorizer::Authorizer::V1::IsRequest.new(
-        {
-          policy_context: policy_context,
-          identity_context: identity_context,
-          resource_context: resource_context
-        }
-      )
+      exec_is(config.decision)
+    end
 
+    def allowed?
+      exec_is("allowed")
+    end
+
+    def visible?
+      exec_is("visible")
+    end
+
+    def enabled?
+      exec_is("enabled")
+    end
+
+    private
+
+    def exec_is(decision)
       begin
         response = client.is(
-          is_request, { metadata: {
+          request_is(decision), { metadata: {
             "aserto-tenant-id": config.tenant_id,
             authorization: "basic #{config.authorizer_api_key}"
           } }
@@ -48,12 +58,24 @@ module Aserto
         Aserto.logger.error(e.inspect)
         false
       end
-      response.to_h.dig(:decisions, 0, :is) || false
+
+      decision = response.decisions.find { |el| el.decision == decision }
+      return false unless decision
+
+      decision.is
     end
 
-    private
+    def request_is(decision)
+      Aserto::Authorizer::Authorizer::V1::IsRequest.new(
+        {
+          policy_context: policy_context(decision),
+          identity_context: identity_context,
+          resource_context: resource_context
+        }
+      )
+    end
 
-    def policy_context
+    def policy_context(decision)
       path = Aserto::PolicyPathMapper.execute(config.policy_root, request)
       Aserto.logger.debug "aserto authorizing: #{path}"
 
@@ -61,7 +83,7 @@ module Aserto
         {
           id: config.policy_id,
           path: path,
-          decisions: [config.decision]
+          decisions: [decision]
         }
       )
     end
