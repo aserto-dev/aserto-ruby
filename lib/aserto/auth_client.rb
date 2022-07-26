@@ -56,10 +56,10 @@ module Aserto
         )
       rescue GRPC::BadStatus => e
         Aserto.logger.error(e.inspect)
-        false
+        return false
       end
 
-      decision = response&.decisions&.find { |el| el.decision == decision }
+      decision = response.decisions.find { |el| el.decision == decision }
       return false unless decision
 
       decision.is
