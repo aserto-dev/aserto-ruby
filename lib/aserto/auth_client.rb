@@ -59,7 +59,7 @@ module Aserto
         false
       end
 
-      decision = response.decisions.find { |el| el.decision == decision }
+      decision = response&.decisions&.find { |el| el.decision == decision }
       return false unless decision
 
       decision.is

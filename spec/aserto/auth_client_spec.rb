@@ -48,6 +48,14 @@ describe Aserto::AuthClient do
       it { is_expected.to be_falsey }
     end
 
+    context "when error" do
+      before do
+        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_raise(GRPC::BadStatus)
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
     context "when chaning default decision" do
       let(:initial_decision) { Aserto.config.decision }
 
