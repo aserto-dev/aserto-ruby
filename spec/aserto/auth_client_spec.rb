@@ -14,6 +14,8 @@ describe Aserto::AuthClient do
   let(:client) { described_class.new(request) }
 
   describe ".is" do
+    subject { client.is }
+
     context "when allowed" do
       before do
         GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
@@ -27,9 +29,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client.is).to be_truthy
-      end
+      it { is_expected.to be_truthy }
     end
 
     context "when not allowed" do
@@ -45,9 +45,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client.is).to be_falsey
-      end
+      it { is_expected.to be_falsey }
     end
 
     context "when chaning default decision" do
@@ -78,9 +76,7 @@ describe Aserto::AuthClient do
           end
         end
 
-        it "returns true" do
-          expect(client.is).to be_truthy
-        end
+        it { is_expected.to be_truthy }
       end
 
       context "when not visible" do
@@ -96,14 +92,14 @@ describe Aserto::AuthClient do
           end
         end
 
-        it "returns true" do
-          expect(client.is).to be_falsey
-        end
+        it { is_expected.to be_falsey }
       end
     end
   end
 
   describe ".allowed?" do
+    subject { client }
+
     context "when allowed" do
       before do
         GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
@@ -117,9 +113,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).to be_allowed
-      end
+      it { is_expected.to be_allowed }
     end
 
     context "when not allowed" do
@@ -135,13 +129,13 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).not_to be_allowed
-      end
+      it { is_expected.not_to be_allowed }
     end
   end
 
   describe ".visible?" do
+    subject { client }
+
     context "when visible" do
       before do
         GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
@@ -155,9 +149,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).to be_visible
-      end
+      it { is_expected.to be_visible }
     end
 
     context "when not visible" do
@@ -173,13 +165,13 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).not_to be_visible
-      end
+      it { is_expected.not_to be_visible }
     end
   end
 
   describe ".enabled?" do
+    subject { client }
+
     context "when enabled" do
       before do
         GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
@@ -193,9 +185,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).to be_enabled
-      end
+      it { is_expected.to be_enabled }
     end
 
     context "when not enabled" do
@@ -211,9 +201,7 @@ describe Aserto::AuthClient do
         end
       end
 
-      it "returns true" do
-        expect(client).not_to be_enabled
-      end
+      it { is_expected.not_to be_enabled }
     end
   end
 end
