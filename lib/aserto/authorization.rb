@@ -16,13 +16,14 @@ module Aserto
       allowed = if enabled?(request)
                   Aserto.logger.debug("Aserto authorization enabled")
                   client = Aserto::AuthClient.new(request)
-                  client.is
+                  res = client.is
+                  Aserto.logger.debug("Aserto authorization result -> allowed: #{res}")
+                  res
                 else
                   Aserto.logger.debug("Aserto authorization not enabled")
                   true
                 end
 
-      Aserto.logger.debug("Aserto authorization result -> allowed: #{allowed}")
       return @app.call env if allowed
 
       config.on_unauthorized.call(env)
