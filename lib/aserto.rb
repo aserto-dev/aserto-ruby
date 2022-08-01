@@ -53,11 +53,13 @@ module Aserto
         klass.define_singleton_method(:execute) do |request|
           if block_given?
             result = yield(request)
-            raise Aserto::Errors::InvalidResourceMapping unless result.is_a?(Hash)
+            unless result.is_a?(Hash)
+              raise Aserto::InvalidResourceMapping, "block must return a hash, got: #{result.class}"
+            end
 
             require "google/protobuf/well_known_types"
 
-            result.deep_transform_keys!(&:to_s)
+            result.transform_keys!(&:to_s)
             Google::Protobuf::Struct.from_hash(result)
           end
         end
