@@ -18,8 +18,8 @@ describe Aserto::AuthClient do
 
     context "when allowed" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: true },
               { decision: "visible", is: false },
@@ -34,8 +34,8 @@ describe Aserto::AuthClient do
 
     context "when not allowed" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: false },
               { decision: "visible", is: true },
@@ -50,7 +50,7 @@ describe Aserto::AuthClient do
 
     context "when error" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_raise(GRPC::BadStatus)
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_raise(GRPC::BadStatus)
       end
 
       it { is_expected.to be_falsey }
@@ -73,8 +73,8 @@ describe Aserto::AuthClient do
 
       context "when visible" do
         before do
-          GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-            Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+          GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+            Aserto::Authorizer::V2::IsResponse.new(
               { decisions: [
                 { decision: "allowed", is: false },
                 { decision: "visible", is: true },
@@ -89,8 +89,8 @@ describe Aserto::AuthClient do
 
       context "when not visible" do
         before do
-          GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-            Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+          GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+            Aserto::Authorizer::V2::IsResponse.new(
               { decisions: [
                 { decision: "allowed", is: true },
                 { decision: "visible", is: false },
@@ -110,8 +110,8 @@ describe Aserto::AuthClient do
 
     context "when allowed" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: true },
               { decision: "visible", is: false },
@@ -126,8 +126,8 @@ describe Aserto::AuthClient do
 
     context "when not allowed" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: false },
               { decision: "visible", is: true },
@@ -146,8 +146,8 @@ describe Aserto::AuthClient do
 
     context "when visible" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: false },
               { decision: "visible", is: true },
@@ -162,8 +162,8 @@ describe Aserto::AuthClient do
 
     context "when not visible" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: true },
               { decision: "visible", is: false },
@@ -182,8 +182,8 @@ describe Aserto::AuthClient do
 
     context "when enabled" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: false },
               { decision: "visible", is: false },
@@ -198,8 +198,8 @@ describe Aserto::AuthClient do
 
     context "when not enabled" do
       before do
-        GrpcMock.stub_request("/aserto.authorizer.authorizer.v1.Authorizer/Is").to_return do
-          Aserto::Authorizer::Authorizer::V1::IsResponse.new(
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
             { decisions: [
               { decision: "allowed", is: true },
               { decision: "visible", is: true },

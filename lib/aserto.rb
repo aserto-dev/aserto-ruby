@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rack"
-require "aserto-grpc-authz"
+require "aserto/authorizer"
 
 require_relative "aserto/version"
 require_relative "aserto/config"
@@ -29,15 +29,15 @@ module Aserto
     # Allows the initializer to provide a custom
     # implementation for the PolicyPathMapper
     #
-    # Aserto.with_policy_path_mapper do |policy_root, request|
+    # Aserto.with_policy_path_mapper do |request|
     #   method = request.request_method
     #   path = request.path_info
-    #   "custom => #{policy_root}.#{method}.#{path}"
+    #   "custom => #{method}.#{path}"
     # end
     def with_policy_path_mapper
       Aserto::PolicyPathMapper.class_eval do |klass|
-        klass.define_singleton_method(:execute) do |policy_root, request|
-          yield(policy_root, request) if block_given?
+        klass.define_singleton_method(:execute) do |request|
+          yield(request) if block_given?
         end
       end
     end

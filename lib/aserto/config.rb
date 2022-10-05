@@ -25,7 +25,7 @@ module Aserto
 
     DEFAULT_ATTRS = {
       authorizer_api_key: "",
-      service_url: "authorizer.prod.aserto.com:8443",
+      service_url: "localhost:8282",
       decision: "allowed",
       disabled_for: [{}],
       enabled: true,
@@ -33,9 +33,9 @@ module Aserto
         type: :none
       },
       logger: Config.default_logger,
-      policy_id: "",
-      policy_root: "",
-      tenant_id: "",
+      policy_name: "",
+      instance_label: "",
+      cert_path: "",
       on_unauthorized: lambda do |_env|
         return [403, {}, ["Forbidden"]]
       end
