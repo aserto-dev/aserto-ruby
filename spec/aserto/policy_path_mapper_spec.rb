@@ -10,7 +10,7 @@ describe Aserto::PolicyPathMapper do
             "REQUEST_METHOD" => "GET",
             "PATH_INFO" => "/"
           )
-        ), EXPECTED: "GET"
+        ), EXPECTED: "tp.GET"
       },
       {
         REQUEST: Rack::Request.new(
@@ -19,7 +19,7 @@ describe Aserto::PolicyPathMapper do
             "REQUEST_METHOD" => "DELETE",
             "PATH_INFO" => "/"
           )
-        ), EXPECTED: "DELETE"
+        ), EXPECTED: "tp.DELETE"
       },
       {
         REQUEST: Rack::Request.new(
@@ -28,7 +28,7 @@ describe Aserto::PolicyPathMapper do
             "REQUEST_METHOD" => "PATCH",
             "PATH_INFO" => "/"
           )
-        ), EXPECTED: "PATCH"
+        ), EXPECTED: "tp.PATCH"
       },
       {
         REQUEST: Rack::Request.new(
@@ -37,7 +37,7 @@ describe Aserto::PolicyPathMapper do
             "REQUEST_METHOD" => "PUT",
             "PATH_INFO" => "/"
           )
-        ), EXPECTED: "PUT"
+        ), EXPECTED: "tp.PUT"
       },
       {
         REQUEST: Rack::Request.new(
@@ -45,7 +45,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/foo",
             "REQUEST_METHOD" => "POST"
           )
-        ), EXPECTED: "POST.foo"
+        ), EXPECTED: "tp.POST.foo"
       },
       {
         REQUEST: Rack::Request.new(
@@ -53,7 +53,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/foo",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.foo"
+        ), EXPECTED: "tp.GET.foo"
       },
       {
         REQUEST: Rack::Request.new(
@@ -61,7 +61,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/?a=b",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET"
+        ), EXPECTED: "tp.GET"
       },
       {
         REQUEST: Rack::Request.new(
@@ -69,7 +69,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/en-us/api",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.en_us.api"
+        ), EXPECTED: "tp.GET.en_us.api"
       },
       {
         REQUEST: Rack::Request.new(
@@ -77,7 +77,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/en-us?view=3",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.en_us"
+        ), EXPECTED: "tp.GET.en_us"
       },
       {
         REQUEST: Rack::Request.new(
@@ -85,7 +85,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/en_us",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.en_us"
+        ), EXPECTED: "tp.GET.en_us"
       },
       {
         REQUEST: Rack::Request.new(
@@ -93,7 +93,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/til~de",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.til_de"
+        ), EXPECTED: "tp.GET.til_de"
       },
       {
         REQUEST: Rack::Request.new(
@@ -101,7 +101,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/__id",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.__id"
+        ), EXPECTED: "tp.GET.__id"
       },
       {
         REQUEST: Rack::Request.new(
@@ -109,7 +109,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/__id",
             "REQUEST_METHOD" => "POST"
           )
-        ), EXPECTED: "POST.__id"
+        ), EXPECTED: "tp.POST.__id"
       },
       {
         REQUEST: Rack::Request.new(
@@ -117,7 +117,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/v1",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.v1"
+        ), EXPECTED: "tp.GET.v1"
       },
       {
         REQUEST: Rack::Request.new(
@@ -125,7 +125,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/dotted.endpoint",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.dotted.endpoint"
+        ), EXPECTED: "tp.GET.dotted.endpoint"
       },
       {
         REQUEST: Rack::Request.new(
@@ -133,7 +133,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/a?dotted=q.u.e.r.y",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.a"
+        ), EXPECTED: "tp.GET.a"
       },
       {
         REQUEST: Rack::Request.new(
@@ -141,7 +141,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/numeric/123456/1",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.numeric.123456.1"
+        ), EXPECTED: "tp.GET.numeric.123456.1"
       },
       {
         REQUEST: Rack::Request.new(
@@ -149,7 +149,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/Uppercase",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.Uppercase"
+        ), EXPECTED: "tp.GET.Uppercase"
       },
       {
         REQUEST: Rack::Request.new(
@@ -157,7 +157,7 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/api/:colons",
             "REQUEST_METHOD" => "GET"
           )
-        ), EXPECTED: "GET.api.__colons"
+        ), EXPECTED: "tp.GET.api.__colons"
       },
       {
         REQUEST: Rack::Request.new(
@@ -165,29 +165,29 @@ describe Aserto::PolicyPathMapper do
             "http://localhost:8080/api/:colons",
             "REQUEST_METHOD" => "POST"
           )
-        ), EXPECTED: "POST.api.__colons"
+        ), EXPECTED: "tp.POST.api.__colons"
       },
       { REQUEST: Rack::Request.new(
         Rack::MockRequest.env_for(
           "http://localhost:8080/api/:colons",
           "REQUEST_METHOD" => "DELETE"
         )
-      ), EXPECTED: "DELETE.api.__colons" }
+      ), EXPECTED: "tp.DELETE.api.__colons" }
     ]
     data.each do |h|
       it "maps correctly #{h[:REQUEST].url}" do
-        expect(described_class.execute(h[:REQUEST])).to eql(h[:EXPECTED])
+        expect(described_class.execute("tp", h[:REQUEST])).to eql(h[:EXPECTED])
       end
     end
   end
 
   context "when overwriting" do
     before do
-      Aserto.with_policy_path_mapper do |request|
+      Aserto.with_policy_path_mapper do |policy_root, request|
         method = request.request_method
         path = request.path_info
 
-        "custom => #{method}.#{path}"
+        "custom => #{policy_root}.#{method}.#{path}"
       end
     end
 
@@ -200,7 +200,7 @@ describe Aserto::PolicyPathMapper do
         )
       )
 
-      expect(described_class.execute(request)).to eql("custom => GET./")
+      expect(described_class.execute("test", request)).to eql("custom => test.GET./")
     end
   end
 end

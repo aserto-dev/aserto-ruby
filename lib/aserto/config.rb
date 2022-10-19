@@ -35,6 +35,7 @@ module Aserto
       logger: Config.default_logger,
       policy_name: "",
       instance_label: "",
+      policy_root: "",
       cert_path: "",
       on_unauthorized: lambda do |_env|
         return [403, {}, ["Forbidden"]]

@@ -3,7 +3,7 @@
 module Aserto
   module PolicyPathMapper
     class << self
-      def execute(request)
+      def execute(policy_root, request)
         method = request.request_method
         path = request.path_info
 
@@ -21,7 +21,7 @@ module Aserto
           path = route[:path] if route
         end
 
-        policy_path = +"#{method}.#{path}"
+        policy_path = +"#{policy_root}.#{method}.#{path}"
         policy_path.tr!("/", ".")
         policy_path.gsub!("..", ".")
         policy_path.gsub!(":", "__")

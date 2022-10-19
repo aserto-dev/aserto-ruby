@@ -34,6 +34,7 @@ end
 Aserto.configure do |config|
   config.policy_name = "peoplefinder"
   config.authorizer_api_key = "123456"
+  config.policy_root = "peoplefinder"
   config.instance_label = "peoplefinder"
   config.service_url = "localhost:8282"
   config.decision = "allowed"

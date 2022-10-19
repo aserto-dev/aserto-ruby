@@ -83,7 +83,7 @@ module Aserto
     end
 
     def policy_context(decision)
-      path = Aserto::PolicyPathMapper.execute(request)
+      path = Aserto::PolicyPathMapper.execute(config.policy_root, request)
       Aserto.logger.debug "aserto authorizing: #{path}"
 
       Aserto::Authorizer::V2::Api::PolicyContext.new(

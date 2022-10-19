@@ -28,6 +28,10 @@ gem install aserto
 ```
 
 ## Configuration
+The following configuration settings are required for the authorization middleware:
+ - policy_root
+
+These settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
 
 The middleware accepts the following optional parameters:
 
@@ -89,11 +93,10 @@ This behaviour can be overwritten by providing a custom function:
 # config/initializers/aserto.rb
 
 # must return a String
-Aserto.with_policy_path_mapper do |request|
+Aserto.with_policy_path_mapper do |policy_root, request|
   method = request.request_method
   path = request.path_info
-
-  "custom: #{method}.#{path}"
+  "custom: #{policy_root}.#{method}.#{path}"
 end
 ```
 
@@ -149,6 +152,7 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
   config.policy_name = "my-policy-name"
   config.instance_label = "my-instance"
   config.authorizer_api_key = Rails.application.credentials.aserto[:authorizer_api_key]
+  config.policy_root = "peoplefinder"
   config.service_url = "localhost:8282"
   config.cert_path = "/path/to/topaz/cert.crt"
   config.decision = "allowed"
@@ -183,6 +187,7 @@ use Aserto::Authorization do |config|
   config.enabled = true
   config.policy_name = "my-policy-name"
   config.authorizer_api_key = ENV['authorizer_api_key']
+  config.policy_root = "peoplefinder"
   config.instance_label = "my-instance"
   config.service_url = "localhost:8282"
   config.cert_path = "/path/to/topaz/cert.crt"
