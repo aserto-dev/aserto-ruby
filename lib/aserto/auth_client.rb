@@ -76,8 +76,20 @@ module Aserto
       Aserto::Authorizer::V2::IsRequest.new(
         {
           policy_context: policy_context(decision),
+          policy_instance: policy_instance,
           identity_context: identity_context,
           resource_context: resource_context
+        }
+      )
+    end
+
+    def policy_instance
+      return unless config.policy_name && config.instance_label
+
+      Aserto::Authorizer::V2::Api::PolicyInstance.new(
+        {
+          name: config.policy_name,
+          instance_label: config.instance_label
         }
       )
     end
@@ -88,9 +100,7 @@ module Aserto
 
       Aserto::Authorizer::V2::Api::PolicyContext.new(
         {
-          name: config.policy_name,
           path: path,
-          instance_label: config.instance_label,
           decisions: [decision]
         }
       )
