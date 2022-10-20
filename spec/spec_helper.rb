@@ -32,10 +32,10 @@ end
 
 # configure Aserto
 Aserto.configure do |config|
-  config.policy_id = "1234"
-  config.tenant_id = "12345"
+  config.policy_name = "peoplefinder"
   config.authorizer_api_key = "123456"
   config.policy_root = "peoplefinder"
-  config.service_url = "authorizer.eng.aserto.com:8443"
+  config.instance_label = "peoplefinder"
+  config.service_url = "localhost:8282"
   config.decision = "allowed"
 end

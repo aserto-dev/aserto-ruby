@@ -29,9 +29,6 @@ gem install aserto
 
 ## Configuration
 The following configuration settings are required for the authorization middleware:
- - policy_id
- - tenant_id
- - authorizer_api_key
  - policy_root
 
 These settings can be retrieved from the [Policy Settings](https://console.aserto.com/ui/policies) page of your Aserto account.
@@ -41,7 +38,11 @@ The middleware accepts the following optional parameters:
 | Parameter name | Default value | Description |
 | -------------- | ------------- | ----------- |
 | enabled | true | Enables or disables Aserto Authorization |
-| service_url | `"authorizer.prod.aserto.com:8443"` | Sets the URL for the authorizer endpoint. |
+| policy_name | `""` | The Aserto policy name. |
+| instance_label | `""` | The label of the active policy runtime. |
+| authorizer_api_key | "" | The authorizer API Key |
+| service_url | `"localhost:8282"` | Sets the URL for the authorizer endpoint. |
+| cert_path | `""` | Path to the grpc service certificate when connecting to local topaz instance. |
 | decision | `"allowed"` | The decision that will be used by the middleware when creating an authorizer request. |
 | logger | `STDOUT` | The logger to be used by the middleware. |
 | identity_mapping | `{ type: :none }` | The strategy for retrieving the identity, possible values: `:jwt, :sub, :none` |
@@ -95,7 +96,6 @@ This behaviour can be overwritten by providing a custom function:
 Aserto.with_policy_path_mapper do |policy_root, request|
   method = request.request_method
   path = request.path_info
-
   "custom: #{policy_root}.#{method}.#{path}"
 end
 ```
@@ -149,11 +149,12 @@ config.disabled_for = [
 
 Rails.application.config.middleware.use Aserto::Authorization do |config|
   config.enabled = true
-  config.policy_id = "my-policy-id"
-  config.tenant_id = "my-tenant-id"
+  config.policy_name = "my-policy-name"
+  config.instance_label = "my-instance"
   config.authorizer_api_key = Rails.application.credentials.aserto[:authorizer_api_key]
   config.policy_root = "peoplefinder"
-  config.service_url = "authorizer.prod.aserto.com:8443"
+  config.service_url = "localhost:8282"
+  config.cert_path = "/path/to/topaz/cert.crt"
   config.decision = "allowed"
   config.logger = Rails.logger
   config.identity_mapping = {
@@ -184,11 +185,12 @@ end
 # aserto middleware
 use Aserto::Authorization do |config|
   config.enabled = true
-  config.policy_id = "my-policy-id"
-  config.tenant_id = "my-tenant-id"
+  config.policy_name = "my-policy-name"
   config.authorizer_api_key = ENV['authorizer_api_key']
   config.policy_root = "peoplefinder"
-  config.service_url = "authorizer.prod.aserto.com:8443"
+  config.instance_label = "my-instance"
+  config.service_url = "localhost:8282"
+  config.cert_path = "/path/to/topaz/cert.crt"
   config.decision = "allowed"
   config.disabled_for = [
     {

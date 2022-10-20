@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "aserto-grpc-authz"
+require "aserto/authorizer"
 
 require_relative "identity_mapper"
 require_relative "policy_path_mapper"
@@ -11,10 +11,10 @@ module Aserto
     attr_reader :client, :config, :request
 
     INTERNAL_MAPPING = {
-      unknown: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_UNKNOWN,
-      none: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_NONE,
-      sub: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_SUB,
-      jwt: Aserto::Api::V1::IdentityType::IDENTITY_TYPE_JWT
+      unknown: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_UNKNOWN,
+      none: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_NONE,
+      sub: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_SUB,
+      jwt: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_JWT
     }.freeze
 
     private_constant :INTERNAL_MAPPING
@@ -22,9 +22,9 @@ module Aserto
     def initialize(request)
       @request = request
       @config = Aserto.config
-      @client = Aserto::Authorizer::Authorizer::V1::Authorizer::Stub.new(
+      @client = Aserto::Authorizer::V2::Authorizer::Stub.new(
         config.service_url,
-        GRPC::Core::ChannelCredentials.new
+        load_creds
       )
     end
 
@@ -46,11 +46,18 @@ module Aserto
 
     private
 
+    def load_creds
+      if File.file?(config.cert_path)
+        GRPC::Core::ChannelCredentials.new(File.read(config.cert_path))
+      else
+        GRPC::Core::ChannelCredentials.new
+      end
+    end
+
     def exec_is(decision)
       begin
         response = client.is(
           request_is(decision), { metadata: {
-            "aserto-tenant-id": config.tenant_id,
             authorization: "basic #{config.authorizer_api_key}"
           } }
         )
@@ -66,7 +73,7 @@ module Aserto
     end
 
     def request_is(decision)
-      Aserto::Authorizer::Authorizer::V1::IsRequest.new(
+      Aserto::Authorizer::V2::IsRequest.new(
         {
           policy_context: policy_context(decision),
           identity_context: identity_context,
@@ -79,10 +86,11 @@ module Aserto
       path = Aserto::PolicyPathMapper.execute(config.policy_root, request)
       Aserto.logger.debug "aserto authorizing: #{path}"
 
-      Aserto::Api::V1::PolicyContext.new(
+      Aserto::Authorizer::V2::Api::PolicyContext.new(
         {
-          id: config.policy_id,
+          name: config.policy_name,
           path: path,
+          instance_label: config.instance_label,
           decisions: [decision]
         }
       )
@@ -90,7 +98,7 @@ module Aserto
 
     def identity_context
       identity = Aserto::IdentityMapper.execute(request)
-      Aserto::Api::V1::IdentityContext.new(
+      Aserto::Authorizer::V2::Api::IdentityContext.new(
         {
           identity: identity.fetch(:identity, "null"),
           type: INTERNAL_MAPPING[identity.fetch(:type, :unknown)]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rack"
-require "aserto-grpc-authz"
+require "aserto/authorizer"
 
 require_relative "aserto/version"
 require_relative "aserto/config"
