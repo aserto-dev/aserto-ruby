@@ -56,11 +56,7 @@ module Aserto
 
     def exec_is(decision)
       begin
-        response = client.is(
-          request_is(decision), { metadata: {
-            authorization: "basic #{config.authorizer_api_key}"
-          } }
-        )
+        response = client.is(request_is(decision), headers)
       rescue GRPC::BadStatus => e
         Aserto.logger.error(e.inspect)
         return false
@@ -70,6 +66,16 @@ module Aserto
       return false unless decision
 
       decision.is
+    end
+
+    def headers
+      headers = {
+        authorization: "basic #{config.authorizer_api_key}"
+      }
+
+      headers["aserto-tenant-id"] = config.tenant_id if config.tenant_id && config.tenant_id != ""
+
+      { metadata: headers }
     end
 
     def request_is(decision)

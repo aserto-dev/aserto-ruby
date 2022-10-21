@@ -41,6 +41,7 @@ The middleware accepts the following optional parameters:
 | policy_name | `""` | The Aserto policy name. |
 | instance_label | `""` | The label of the active policy runtime. |
 | authorizer_api_key | "" | The authorizer API Key |
+| tenant_id | "" | The Aserto Tenant ID |
 | service_url | `"localhost:8282"` | Sets the URL for the authorizer endpoint. |
 | cert_path | `""` | Path to the grpc service certificate when connecting to local topaz instance. |
 | decision | `"allowed"` | The decision that will be used by the middleware when creating an authorizer request. |

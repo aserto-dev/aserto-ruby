@@ -25,6 +25,7 @@ module Aserto
 
     DEFAULT_ATTRS = {
       authorizer_api_key: "",
+      tenant_id: "",
       service_url: "localhost:8282",
       decision: "allowed",
       disabled_for: [{}],
