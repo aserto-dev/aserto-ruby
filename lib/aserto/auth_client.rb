@@ -47,8 +47,9 @@ module Aserto
     private
 
     def load_creds
-      if File.file?(config.cert_path)
-        GRPC::Core::ChannelCredentials.new(File.read(config.cert_path))
+      cert_path = config.cert_path
+      if cert_path && File.file?(cert_path)
+        GRPC::Core::ChannelCredentials.new(File.read(cert_path))
       else
         GRPC::Core::ChannelCredentials.new
       end
