@@ -32,14 +32,7 @@ Gem::Specification.new do |spec|
 
   # runtime dependencies
   spec.add_runtime_dependency "aserto-authorizer", ">= 0.0.3"
+  spec.add_runtime_dependency "aserto-directory",  ">= 0.0.2"
   spec.add_runtime_dependency "jwt", "~> 2.4"
   spec.add_runtime_dependency "rack", "~> 2.0"
-
-  # development dependencies
-  spec.add_development_dependency("bundler", ">= 1.15.0", "< 3.0")
-  spec.add_development_dependency "codecov", "~> 0.6"
-  spec.add_development_dependency "grpc_mock", "~> 0.4"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop-performance", "~> 1.14"
-  spec.add_development_dependency "rubocop-rspec", "~> 2.11"
 end

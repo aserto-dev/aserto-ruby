@@ -1,15 +1,9 @@
-# Ruby Rack Middleware for Aserto
+# Aserto Ruby SDK
 
 [![Gem Version](https://badge.fury.io/rb/aserto.svg)](https://badge.fury.io/rb/aserto)
 [![ci](https://github.com/aserto-dev/aserto-ruby/actions/workflows/ci.yaml/badge.svg)](https://github.com/aserto-dev/aserto-ruby/actions/workflows/ci.yaml)
 [![slack](https://img.shields.io/badge/slack-Aserto%20Community-brightgreen)](https://asertocommunity.slack.com
 )
-
-`Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
-
-## Prerequisites
-* [Ruby](https://www.ruby-lang.org/en/downloads/) 2.7 or newer.
-* An [Aserto](https://console.aserto.com) account.
 
 ## Installation
 Add to your application Gemfile:
@@ -27,7 +21,117 @@ Or install it yourself as:
 gem install aserto
 ```
 
-## Configuration
+## Directory
+
+The Directory APIs can be used to get or set object instances and relation instances. They can also be used to check whether a user has a permission or relation on an object instance.
+
+### Directory Client
+
+You can initialize a directory client as follows:
+
+```ruby
+require 'aserto/directory/client'
+
+directory_client = Aserto::Directory::Client.new(
+  url: "directory.eng.aserto.com:8443",
+  tenant_id: "aserto-tenant-id",
+  api_key: "basic directory api key",
+)
+```
+
+- `url`: hostname:port of directory service (_required_)
+- `api_key`: API key for directory service (_required_ if using hosted directory)
+- `tenant_id`: Aserto tenant ID (_required_ if using hosted directory)
+- `cert_path`: Path to the grpc service certificate when connecting to local topaz instance.
+
+### Getting objects and relations
+Get an object instance with the type `type-name` and the key `object-key`. For example:
+
+```ruby
+user = directory_client.object(type: 'user', key: 'euang@acmecorp.com')
+```
+
+Get an array of relations of a certain type for an object instance. For example:
+
+```ruby
+identity = 'euang@acmecorp.com';
+relations = directory_client.relation(
+  {
+    subject: {
+      type: 'user',
+    },
+    object: {
+      type: 'identity',
+      key: identity
+    },
+    relation: {
+      name: 'identifier',
+      objectType: 'identity'
+    }
+  }
+)
+```
+
+### Setting objects and relations
+
+Create a new object
+```ruby
+user = directory_client.set_object(object: { type: "user", key: "test-object", display_name: "test object" })
+identity = directory_client.set_object(object: { type: "identity", key: "test-identity" })
+```
+
+Update an existing object
+```ruby
+user = directory_client.set_object(object: { type: "user", key: "test-object", display_name: "test object" })
+user.display_name = 'test object edit'
+updated_user = directory_client.set_object(object: user)
+```
+
+Create a new relation
+```ruby
+directory_client.set_relation(
+  subject: { type: "user", "test-object" },
+  relation: "identifier",
+  object: { type: "identity", key: "test-identity" }
+)
+```
+
+Delete a relation
+```ruby
+pp client.delete_relation(
+  subject: { type: "user", key: "test-object" },
+  relation: { name: "identifier", object_type: "identity" },
+  object: { type: "identity", key: "test-identity" }
+)
+```
+
+### Checking permissions and relations
+Check permission
+```ruby
+directory_client.check_permission(
+  subject: { type: "user", key: "011a88bc-7df9-4d92-ba1f-2ff319e101e1" },
+  permission: { name: "read" },
+  object: { type: "group", key: "executive" }
+)
+```
+
+Check relation
+```ruby
+directory_client.check_relation(
+  subject: { type: "user", key: "dfdadc39-7335-404d-af66-c77cf13a15f8" },
+  relation: { name: "identifier", object_type: "identity" },
+  object: { type: "identity", key: "euang@acmecorp.com" }
+)
+```
+
+## Authorizer
+`Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
+
+### Prerequisites
+* [Ruby](https://www.ruby-lang.org/en/downloads/) 2.7 or newer.
+* An [Aserto](https://console.aserto.com) account.
+
+### Configuration
 The following configuration settings are required for the authorization middleware:
  - policy_root
 
@@ -50,7 +154,7 @@ The middleware accepts the following optional parameters:
 | disabled_for | `[{}]` | Which path and actions to skip the authorization for. |
 | on_unauthorized | `-> { return [403, {}, ["Forbidden"]] }`| A lambda that is executed when the authorization fails. |
 
-## Identity
+### Identity
 To determine the identity of the user, the middleware can be configured to use a JWT token or a claim using the `identity_mapping` config.
 ```ruby
 # configure the middleware to use a JWT token from the `my-auth-header` header.
@@ -82,7 +186,7 @@ Aserto.with_identity_mapper do |request|
 end
 ```
 
-## URL path to policy mapping
+### URL path to policy mapping
 By default, when computing the policy path, the middleware:
 * converts all slashes to dots
 * converts any character that is not alpha, digit, dot or underscore to underscore
@@ -101,7 +205,7 @@ Aserto.with_policy_path_mapper do |policy_root, request|
 end
 ```
 
-## Resource
+### Resource
 A resource can be any structured data that the authorization policy uses to evaluate decisions. By default, middleware does not include a resource in authorization calls.
 
 This behaviour can be overwritten by providing a custom function:
@@ -115,14 +219,14 @@ Aserto.with_resource_mapper do |request|
 end
 ```
 
-## Disable authorization for specific paths
+### Disable authorization for specific paths
 
 The middleware exposes a `disable_for` configuration option that
 accepts an array of hashes with the following keys:
  - path - the path to disable authorization for
  - actions - an array of actions to disable authorization for
 
-### Rails
+#### Rails
 You can find the paths and actions using `bundle exec rails routes`
 ```bash
 bundle exec rails routes
@@ -142,9 +246,9 @@ config.disabled_for = [
   }
 ]
 ```
-## Examples
+### Examples
 
-### Rails
+#### Rails
 ```ruby
 # config/initializers/aserto.rb
 
@@ -179,7 +283,7 @@ Rails.application.config.middleware.use Aserto::Authorization do |config|
 end
 ```
 
-### Sinatra
+#### Sinatra
 ```ruby
 # server.rb
 
