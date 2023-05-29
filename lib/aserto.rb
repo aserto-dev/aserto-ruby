@@ -11,7 +11,7 @@ require_relative "aserto/identity_mapper"
 require_relative "aserto/resource_mapper"
 require_relative "aserto/auth_client"
 require_relative "aserto/errors"
-require_relative "aserto/directory_client"
+require_relative "aserto/directory/client"
 
 module Aserto
   class << self
