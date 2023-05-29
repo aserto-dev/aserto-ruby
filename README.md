@@ -5,6 +5,21 @@
 [![slack](https://img.shields.io/badge/slack-Aserto%20Community-brightgreen)](https://asertocommunity.slack.com
 )
 
+## Installation
+Add to your application Gemfile:
+
+```ruby
+gem "aserto"
+```
+
+And then execute:
+```bash
+bundle install
+```
+Or install it yourself as:
+```bash
+gem install aserto
+```
 
 ## Directory
 
@@ -115,22 +130,6 @@ directory_client.check_relation(
 ### Prerequisites
 * [Ruby](https://www.ruby-lang.org/en/downloads/) 2.7 or newer.
 * An [Aserto](https://console.aserto.com) account.
-
-### Installation
-Add to your application Gemfile:
-
-```ruby
-gem "aserto"
-```
-
-And then execute:
-```bash
-bundle install
-```
-Or install it yourself as:
-```bash
-gem install aserto
-```
 
 ### Configuration
 The following configuration settings are required for the authorization middleware:
