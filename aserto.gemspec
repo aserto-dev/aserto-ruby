@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Aserto Middleware"
   spec.homepage      = "https://www.aserto.com"
   spec.license       = "Apache-2.0"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
