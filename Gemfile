@@ -6,7 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 group :documentation do
-  gem "yard", "~> 0.8.7.6"
+  gem "yard", "~> 0.9.34"
 end
 
 group :development do
