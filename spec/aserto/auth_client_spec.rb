@@ -57,6 +57,96 @@ describe Aserto::AuthClient do
     end
 
     context "when chaning default decision" do
+      before do
+        Aserto.configure do |config|
+          config.decision = "visible"
+        end
+      end
+
+      after do
+        Aserto.configure do |config|
+          config.decision = "allowed"
+        end
+      end
+
+      context "when visible" do
+        before do
+          GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+            Aserto::Authorizer::V2::IsResponse.new(
+              { decisions: [
+                { decision: "allowed", is: false },
+                { decision: "visible", is: true },
+                { decision: "enabled", is: false }
+              ] }
+            )
+          end
+        end
+
+        it { is_expected.to be_truthy }
+      end
+
+      context "when not visible" do
+        before do
+          GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+            Aserto::Authorizer::V2::IsResponse.new(
+              { decisions: [
+                { decision: "allowed", is: true },
+                { decision: "visible", is: false },
+                { decision: "enabled", is: true }
+              ] }
+            )
+          end
+        end
+
+        it { is_expected.to be_falsey }
+      end
+    end
+  end
+
+  describe ".check" do
+    subject { client.check(object_id: "test", object_type: "group", relation: "member") }
+
+    context "when allowed" do
+      before do
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
+            { decisions: [
+              { decision: "allowed", is: true },
+              { decision: "visible", is: false },
+              { decision: "enabled", is: false }
+            ] }
+          )
+        end
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context "when not allowed" do
+      before do
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_return do
+          Aserto::Authorizer::V2::IsResponse.new(
+            { decisions: [
+              { decision: "allowed", is: false },
+              { decision: "visible", is: true },
+              { decision: "enabled", is: true }
+            ] }
+          )
+        end
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when error" do
+      before do
+        GrpcMock.stub_request("/aserto.authorizer.v2.Authorizer/Is").to_raise(GRPC::BadStatus)
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when chaning default decision" do
       let(:initial_decision) { Aserto.config.decision }
 
       before do
