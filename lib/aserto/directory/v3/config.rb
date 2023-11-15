@@ -8,16 +8,6 @@ module Aserto
       class Config
         attr_reader :reader, :writer, :importer, :exporter, :model
 
-        class BaseConfig
-          attr_reader :url, :credentials, :interceptors
-
-          def initialize(url, credentials, interceptors)
-            @url = url
-            @credentials = credentials
-            @interceptors = interceptors
-          end
-        end
-
         def initialize(config)
           @base = {
             url: config[:url] || "directory.prod.aserto.com:8443",
@@ -33,6 +23,16 @@ module Aserto
         end
 
         private
+
+        class BaseConfig
+          attr_reader :url, :credentials, :interceptors
+
+          def initialize(url, credentials, interceptors)
+            @url = url
+            @credentials = credentials
+            @interceptors = interceptors
+          end
+        end
 
         def build(url: @base[:url], api_key: @base[:api_key], tenant_id: @base[:tenant_id], cert_path: nil)
           return if url.nil? || url.empty? || api_key.nil? || api_key.empty? || tenant_id.nil? || tenant_id.empty?
