@@ -1,9 +1,21 @@
 # frozen_string_literal: true
 
 describe Aserto::Directory::V3::Client do
-  let(:client) { described_class.new(tenant_id: "1234", api_key: "basic test") }
+  describe("client") do
+    context("when config is missing") do
+      let(:client) { described_class.new({ reader: { tenant_id: "1234", api_key: "basic test" } }) }
+
+      it "provides an informative error message" do
+        expect do
+          client.writer.set_object
+        end.to output("Cannot call 'set_object': 'Writer' client is not initialized.\n").to_stdout
+      end
+    end
+  end
 
   describe ".reader" do
+    let(:client) { described_class.new(tenant_id: "1234", api_key: "basic test") }
+
     describe ".get_object" do
       before do
         GrpcMock.stub_request("/aserto.directory.reader.v3.Reader/GetObject").to_return do
