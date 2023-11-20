@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 describe Aserto::Directory::V3::Client do
-  describe("client") do
-    context("when config is missing") do
-      let(:client) { described_class.new({ reader: { tenant_id: "1234", api_key: "basic test" } }) }
-
-      it "provides an informative error message" do
-        expect do
-          client.writer.set_object
-        end.to output("Cannot call 'set_object': 'Writer' client is not initialized.\n").to_stdout
-      end
-    end
-  end
-
   describe ".reader" do
     let(:client) { described_class.new(tenant_id: "1234", api_key: "basic test") }
 
@@ -26,11 +14,9 @@ describe Aserto::Directory::V3::Client do
       end
 
       it "returns the correct object" do
-        expect(client.reader.get_object(
-          Aserto::Directory::Reader::V3::GetObjectRequest.new(
-            object_id: "id",
-            object_type: "type"
-          )
+        expect(client.get_object(
+          object_id: "id",
+          object_type: "type"
         ).to_h).to eq(
           {
             result: {

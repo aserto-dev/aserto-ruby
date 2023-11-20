@@ -3,12 +3,31 @@
 require "aserto/directory"
 require_relative "../interceptors/headers"
 require_relative "config"
+require_relative "reader"
+require_relative "writer"
+require_relative "model"
+require_relative "importer"
+require_relative "exporter"
 
 module Aserto
   module Directory
     module V3
       class Client
-        attr_reader :reader, :writer, :importer, :exporter, :model
+        extend Forwardable
+        include ::Aserto::Directory::V3::Reader
+        # @!parse include ::Aserto::Directory::V3::Reader
+
+        include ::Aserto::Directory::V3::Writer
+        # @!parse include ::Aserto::Directory::V3::Writer
+
+        include ::Aserto::Directory::V3::Model
+        # @!parse include ::Aserto::Directory::V3::Model
+
+        include ::Aserto::Directory::V3::Importer
+        # @!parse include ::Aserto::Directory::V3::Importer
+
+        include ::Aserto::Directory::V3::Exporter
+        # @!parse include ::Aserto::Directory::V3::Exporter
 
         # Creates a new Directory V3 Client
         #
@@ -16,46 +35,26 @@ module Aserto
         # Base configuration
         # If non-nil, this configuration is used for any client that doesn't have its own configuration.
         # If nil, only clients that have their own configuration will be created.
-        # {
-        #   url: "base_url",
-        #   tenant_id: "base_tenant_id",
-        #   api_key: "base_api_key"
         #
-        #   Reader Configuration
-        #   reader: {
-        #     url: "reader_url",
-        #     tenant_id: "reader_tenant_id",
-        #     api_key: "reader_api_key"
-        #   },
+        # @example Create a new Directory V3 Client with all the services
+        #   client = Aserto::Directory::V3::Client.new(
+        #     {
+        #       url: "directory.eng.aserto.com:8443",
+        #       tenant_id: "tenant-id",
+        #       api_key: "basic api-key",
+        #     }
+        #   )
         #
-        #   Writer Configuration
-        #   writer: {
-        #     url: "writer_url",
-        #     tenant_id: "writer_tenant_id",
-        #     api_key: "writer_api_key"
-        #   },
-        #
-        #   Importer Configuration
-        #   importer: {
-        #     url: "importer_url",
-        #     tenant_id: "importer_tenant_id",
-        #     api_key: "importer_api_key"
-        #   },
-        #
-        #   Exporter Configuration
-        #   exporter: {
-        #     url: "exporter_url",
-        #     tenant_id: "exporter_tenant_id",
-        #     api_key: "exporter_api_key"
-        #   },
-        #
-        #   Model Configuration
-        #   model: {
-        #     url: "model_url",
-        #     tenant_id: "model_tenant_id",
-        #     api_key: "model_api_key"
-        #   }
-        # }
+        # @example Create a new Directory V3 Client with reader only
+        #   client = Aserto::Directory::V3::Client.new(
+        #     {
+        #       reader: {
+        #         url: "directory.eng.aserto.com:8443",
+        #         tenant_id: "tenant-id",
+        #         api_key: "basic api-key",
+        #       }
+        #     }
+        #   )
         #
         # @return [Aserto::Directory::V3::Client] the new Directory V3 Client
         def initialize(config)
@@ -69,6 +68,8 @@ module Aserto
         end
 
         private
+
+        attr_reader :reader, :writer, :model, :importer, :exporter
 
         class NullClient
           def initialize(name)
@@ -102,6 +103,12 @@ module Aserto
           )
         end
       end
+
+      remove_const(:Reader)
+      remove_const(:Writer)
+      remove_const(:Model)
+      remove_const(:Importer)
+      remove_const(:Exporter)
     end
   end
 end
