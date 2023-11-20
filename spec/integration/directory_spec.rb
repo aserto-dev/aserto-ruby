@@ -224,8 +224,13 @@ describe "Directory", type: :integration do
           { object: { id: "import-user", type: "user" } },
           { object: { id: "import-group", type: "group" } },
           {
-            relation: { object_id: "import-user", object_type: "user", relation: "member", subject_id: "import-group",
-                        subject_type: "group" }
+            relation: {
+              object_id: "import-user",
+              object_type: "user",
+              relation: "member",
+              subject_id: "import-group",
+              subject_type: "group"
+            }
           }
         ]
       )

@@ -11,6 +11,11 @@ module Aserto
           all: 0x18
         }.freeze
 
+        #
+        # Exports directory data
+        #
+        # @param [String] data_type one of [:unknown, :objects, :relations, :all]
+        #
         def export(data_type: :unknown)
           data = []
           operation = exporter.export(
