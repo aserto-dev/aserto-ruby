@@ -2,6 +2,9 @@
 
 class Topaz
   class << self
+    # 2 minutes
+    ELAPSED = 2 * 60
+
     def run
       stop
 
@@ -15,6 +18,9 @@ class Topaz
 
     def start
       system "topaz start"
+
+      # elapse 2 minutes for topaz to start
+      final_time = Time.now + ELAPSED
 
       client = Aserto::Directory::V3::Client.new(
         {
@@ -30,6 +36,8 @@ class Topaz
         puts "sleep 1"
         sleep 1
         puts "retry..."
+        raise "Topaz did not start in #{ELAPSED} seconds " unless Time.now < final_time
+
         retry
       end
 
