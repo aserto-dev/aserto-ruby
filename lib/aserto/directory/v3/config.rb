@@ -12,7 +12,8 @@ module Aserto
           @base = {
             url: config[:url] || "directory.prod.aserto.com:8443",
             api_key: config[:api_key],
-            tenant_id: config[:tenant_id]
+            tenant_id: config[:tenant_id],
+            cert_path: config[:cert_path]
           }
 
           @reader = build(**(config[:reader] || {}))
@@ -34,10 +35,16 @@ module Aserto
           end
         end
 
-        def build(url: @base[:url], api_key: @base[:api_key], tenant_id: @base[:tenant_id], cert_path: nil)
-          return if url.nil? || url.empty? || api_key.nil? || api_key.empty? || tenant_id.nil? || tenant_id.empty?
+        def build(
+          url: @base[:url],
+          api_key: @base[:api_key],
+          tenant_id: @base[:tenant_id],
+          cert_path: @base[:cert_path]
+        )
 
-          BaseConfig.new(url, load_creds(cert_path), [Interceptors::Headers.new(api_key, tenant_id)])
+          interceptors = []
+          interceptors = [Interceptors::Headers.new(api_key, tenant_id)] if !api_key.nil? && !tenant_id.nil?
+          BaseConfig.new(url, load_creds(cert_path), interceptors)
         end
 
         def load_creds(cert_path)

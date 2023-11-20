@@ -37,7 +37,7 @@ jobs:
         run: bundle exec rubocop --parallel
 
       - name: run RSpec
-        run: bundle exec rspec
+        run: bundle exec rakse spec:all
 
   release:
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
     name: Release to rubygems
     steps:
       - name: Read Configuration
-        uses: hashicorp/vault-action@v2.4.1
+        uses: hashicorp/vault-action@v2.7.2
         id: vault
         with:
           url: ${{ env.VAULT_ADDR }}
