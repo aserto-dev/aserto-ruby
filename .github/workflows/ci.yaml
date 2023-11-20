@@ -36,6 +36,9 @@ jobs:
       - name: Run rubocop
         run: bundle exec rubocop --parallel
 
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: Install topaz
         run: brew install topaz && topaz install
 
