@@ -32,7 +32,7 @@ You can initialize a directory client as follows:
 ```ruby
 require 'aserto/directory/client'
 
-directory_client = Aserto::Directory::Client.new(
+directory_client =Aserto::Directory::V3::Client.new(
   url: "directory.eng.aserto.com:8443",
   tenant_id: "aserto-tenant-id",
   api_key: "basic directory api key",
@@ -44,85 +44,7 @@ directory_client = Aserto::Directory::Client.new(
 - `tenant_id`: Aserto tenant ID (_required_ if using hosted directory)
 - `cert_path`: Path to the grpc service certificate when connecting to local topaz instance.
 
-### Getting objects and relations
-Get an object instance with the type `type-name` and the key `object-key`. For example:
-
-```ruby
-user = directory_client.object(type: 'user', key: 'euang@acmecorp.com')
-```
-
-Get an array of relations of a certain type for an object instance. For example:
-
-```ruby
-identity = 'euang@acmecorp.com';
-relations = directory_client.relation(
-  {
-    subject: {
-      type: 'user',
-    },
-    object: {
-      type: 'identity',
-      key: identity
-    },
-    relation: {
-      name: 'identifier',
-      objectType: 'identity'
-    }
-  }
-)
-```
-
-### Setting objects and relations
-
-Create a new object
-```ruby
-user = directory_client.set_object(object: { type: "user", key: "test-object", display_name: "test object" })
-identity = directory_client.set_object(object: { type: "identity", key: "test-identity" })
-```
-
-Update an existing object
-```ruby
-user = directory_client.set_object(object: { type: "user", key: "test-object", display_name: "test object" })
-user.display_name = 'test object edit'
-updated_user = directory_client.set_object(object: user)
-```
-
-Create a new relation
-```ruby
-directory_client.set_relation(
-  subject: { type: "user", "test-object" },
-  relation: "identifier",
-  object: { type: "identity", key: "test-identity" }
-)
-```
-
-Delete a relation
-```ruby
-pp client.delete_relation(
-  subject: { type: "user", key: "test-object" },
-  relation: { name: "identifier", object_type: "identity" },
-  object: { type: "identity", key: "test-identity" }
-)
-```
-
-### Checking permissions and relations
-Check permission
-```ruby
-directory_client.check_permission(
-  subject: { type: "user", key: "011a88bc-7df9-4d92-ba1f-2ff319e101e1" },
-  permission: { name: "read" },
-  object: { type: "group", key: "executive" }
-)
-```
-
-Check relation
-```ruby
-directory_client.check_relation(
-  subject: { type: "user", key: "dfdadc39-7335-404d-af66-c77cf13a15f8" },
-  relation: { name: "identifier", object_type: "identity" },
-  object: { type: "identity", key: "euang@acmecorp.com" }
-)
-```
+See https://rubydoc.info/gems/aserto/docs/Aserto/Directory/V3/Client for full documentation
 
 ## Authorizer
 `Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
