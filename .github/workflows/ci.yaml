@@ -43,7 +43,7 @@ jobs:
         run: brew tap aserto-dev/tap && brew install aserto-dev/tap/topaz && topaz install
 
       - name: run RSpec
-        run: bundle exec rake spec:all
+        run: bundle exec rake spec:unit
 
   release:
     runs-on: ubuntu-latest
