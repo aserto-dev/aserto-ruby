@@ -36,6 +36,9 @@ jobs:
       - name: Run rubocop
         run: bundle exec rubocop --parallel
 
+      - name: Install topaz
+        run: brew install topaz && topaz install
+
       - name: run RSpec
         run: bundle exec rake spec:all
 
