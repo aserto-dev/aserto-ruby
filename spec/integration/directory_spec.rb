@@ -42,6 +42,8 @@ describe "Directory", type: :integration do
           relations:
             ### display_name: group#member ###
             member: user
+          permissions:
+            read: member
     YAML
   end
 
@@ -74,79 +76,81 @@ describe "Directory", type: :integration do
   it "creates a relation between user and group" do
     expect do
       directory.set_relation(
-        object_id: "my-user",
-        object_type: "user",
+        subject_id: "my-user",
+        subject_type: "user",
         relation: "member",
-        subject_id: "my-group",
-        subject_type: "group"
+        object_id: "my-group",
+        object_type: "group"
       )
     end.not_to raise_error
   end
 
   it "reads a relation between user and group" do
     expect(directory.get_relation(
-      object_id: "my-user",
-      object_type: "user",
+      subject_id: "my-user",
+      subject_type: "user",
       relation: "member",
-      subject_id: "my-group",
-      subject_type: "group"
+      object_id: "my-group",
+      object_type: "group"
     ).result.to_h).to include(
-      { object_type: "user",
-        object_id: "my-user",
+      { subject_id: "my-user",
+        subject_type: "user",
         relation: "member",
-        subject_type: "group",
-        subject_id: "my-group",
+        object_id: "my-group",
+        object_type: "group",
         subject_relation: "" }
     )
   end
 
   it "checks a relation between user and group" do
     expect(directory.check_relation(
-      object_id: "my-user",
-      object_type: "user",
+      subject_id: "my-user",
+      subject_type: "user",
       relation: "member",
-      subject_id: "my-group",
-      subject_type: "group"
+      object_id: "my-group",
+      object_type: "group"
     ).to_h).to eq(
-      { check: false, trace: [] }
+      { check: true, trace: [] }
     )
   end
 
   it "checks a permission of an object" do
     expect(directory.check_permission(
-      object_id: "my-user",
-      object_type: "user",
+      subject_id: "my-user",
+      subject_type: "user",
       permission: "read",
-      subject_id: "my-group",
-      subject_type: "group"
+      object_id: "my-group",
+      object_type: "group"
     ).to_h).to eq(
-      { check: false, trace: [] }
+      { check: true, trace: [] }
     )
   end
 
   it "lists the relations for a given object" do
     expect(directory.get_relations(
-      object_id: "my-user",
-      object_type: "user",
+      subject_id: "my-user",
+      subject_type: "user",
       relation: "member"
     ).results.map(&:to_h)[0]).to include(
-      { object_type: "user",
-        object_id: "my-user",
+      {
+        subject_id: "my-user",
+        subject_type: "user",
         relation: "member",
-        subject_type: "group",
-        subject_id: "my-group",
-        subject_relation: "" }
+        object_id: "my-group",
+        object_type: "group",
+        subject_relation: ""
+      }
     )
   end
 
   it "deletes a relation between user and group" do
     expect do
       directory.delete_relation(
-        object_id: "my-user",
-        object_type: "user",
+        subject_id: "my-user",
+        subject_type: "user",
         relation: "member",
-        subject_id: "my-group",
-        subject_type: "group"
+        object_id: "my-group",
+        object_type: "group"
       )
     end.not_to raise_error
   end
@@ -154,11 +158,11 @@ describe "Directory", type: :integration do
   it "raises error when getting a deleted relation" do
     expect do
       directory.get_relation(
-        object_id: "my-user",
-        object_type: "user",
+        subject_id: "my-user",
+        subject_type: "user",
         relation: "member",
-        subject_id: "my-group",
-        subject_type: "group"
+        object_id: "my-group",
+        object_type: "group"
       )
     end.to raise_error(GRPC::NotFound)
   end
@@ -213,11 +217,11 @@ describe "Directory", type: :integration do
           { object: { id: "import-group", type: "group" } },
           {
             relation: {
-              object_id: "import-user",
-              object_type: "user",
+              subject_id: "import-user",
+              subject_type: "user",
               relation: "member",
-              subject_id: "import-group",
-              subject_type: "group"
+              object_id: "import-group",
+              object_type: "group"
             }
           }
         ]
@@ -247,20 +251,13 @@ describe "Directory", type: :integration do
 
   it "reads the relation with_objects" do
     expect(directory.get_relation(
-      object_id: "import-user",
-      object_type: "user",
+      subject_id: "import-user",
+      subject_type: "user",
       relation: "member",
-      subject_id: "import-group",
-      subject_type: "group",
+      object_id: "import-group",
+      object_type: "group",
       with_objects: true
-    ).result.to_h).to include(
-      { object_type: "user",
-        object_id: "import-user",
-        relation: "member",
-        subject_type: "group",
-        subject_id: "import-group",
-        subject_relation: "" }
-    )
+    ).objects.length).to eq(2)
   end
 
   it "deletes user object with relations" do
@@ -296,11 +293,11 @@ describe "Directory", type: :integration do
   it "raises error when getting a deleted relation after import" do
     expect do
       directory.get_relation(
-        object_id: "import-user",
-        object_type: "user",
+        subject_id: "import-user",
+        subject_type: "user",
         relation: "member",
-        subject_id: "import-group",
-        subject_type: "group"
+        object_id: "import-group",
+        object_type: "group"
       )
     end.to raise_error(GRPC::NotFound)
   end
