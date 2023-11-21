@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "timeout"
+
 class Topaz
   class << self
     # 2 minutes
@@ -22,6 +24,10 @@ class Topaz
       # elapse 2 minutes for topaz to start
       final_time = Time.now + ELAPSED
 
+      Timeout.timeout(60) do
+        trust_certs if ENV["TRUST_CERTIFICATES"]
+      end
+
       client = Aserto::Directory::V3::Client.new(
         {
           url: "localhost:9292",
@@ -40,7 +46,7 @@ class Topaz
         retry
       end
 
-      "server is running"
+      puts "server is running"
     end
 
     def stop
@@ -57,6 +63,14 @@ class Topaz
       return unless File.exist?(File.join(db_dir, "directory.bak"))
 
       File.rename(File.join(db_dir, "directory.bak"), File.join(db_dir, "directory.db"))
+    end
+
+    def trust_certs
+      cert_file = File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
+      sleep(5) until File.exist?(cert_file)
+
+      system("sudo cp $HOME/.config/topaz/certs/grpc-ca.crt /usr/local/share/ca-certificates/")
+      system("sudo update-ca-certificates")
     end
   end
 end
