@@ -52,17 +52,17 @@ module Aserto
     def with_resource_mapper
       Aserto::ResourceMapper.class_eval do |klass|
         klass.define_singleton_method(:execute) do |request|
-          if block_given?
-            result = yield(request)
-            unless result.is_a?(Hash)
-              raise Aserto::InvalidResourceMapping, "block must return a hash, got: #{result.class}"
-            end
+          return unless block_given?
 
-            require "google/protobuf/well_known_types"
-
-            result.transform_keys!(&:to_s)
-            Google::Protobuf::Struct.from_hash(result)
+          result = yield(request)
+          unless result.is_a?(Hash)
+            raise Aserto::InvalidResourceMapping, "block must return a hash, got: #{result.class}"
           end
+
+          require "google/protobuf/well_known_types"
+
+          result.transform_keys!(&:to_s)
+          Google::Protobuf::Struct.from_hash(result)
         end
       end
     end
