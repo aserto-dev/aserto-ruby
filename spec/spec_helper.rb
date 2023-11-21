@@ -7,6 +7,7 @@ require "rack"
 
 require "aserto"
 require "google/protobuf/well_known_types"
+require_relative "integration/topaz"
 
 require "simplecov"
 SimpleCov.start do
@@ -17,12 +18,6 @@ end
 GrpcMock.disable_net_connect!
 
 RSpec.configure do |config|
-  config.before do |example|
-    GrpcMock.allow_net_connect! if example.metadata[:type] == :integration
-  end
-end
-
-RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
@@ -30,6 +25,17 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.expose_dsl_globally = true
+
+  # integration tests setup
+  config.before(:all, type: :integration) do
+    GrpcMock.allow_net_connect!
+    Topaz.run
+  end
+
+  config.after(:all, type: :integration) do
+    GrpcMock.disable_net_connect!
+    Topaz.cleanup
+  end
 
   config.expect_with :rspec do |c|
     c.syntax = :expect

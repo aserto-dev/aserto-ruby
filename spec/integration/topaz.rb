@@ -29,7 +29,6 @@ class Topaz
         }
       )
       begin
-        GrpcMock.allow_net_connect!
         client.get_objects(object_type: "user")
       rescue GRPC::Unavailable => e
         puts e.message
@@ -41,7 +40,6 @@ class Topaz
         retry
       end
 
-      GrpcMock.disable_net_connect!
       "server is running"
     end
 
