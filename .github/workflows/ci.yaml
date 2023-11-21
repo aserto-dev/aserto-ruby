@@ -42,8 +42,22 @@ jobs:
       - name: Install topaz
         run: brew tap aserto-dev/tap && brew install aserto-dev/tap/topaz && topaz install
 
+      - name: Start Topaz
+        run: |
+          topaz configure -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d -s
+          topaz start
+
+          until [ -f $HOME/.config/topaz/certs/grpc-ca.crt ]
+          do
+            sleep 5
+          done
+          topaz stop
+
+          sudo cp $HOME/.config/topaz/certs/grpc-ca.crt /usr/local/share/ca-certificates/
+          sudo update-ca-certificates
+
       - name: run RSpec
-        run: bundle exec rake spec:unit
+        run: bundle exec rake spec:all
 
   release:
     runs-on: ubuntu-latest
