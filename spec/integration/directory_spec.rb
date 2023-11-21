@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "topaz"
-
 describe "Directory", type: :integration do
-  # rubocop:disable RSpec/BeforeAfterAll
-  before :all do
-    Topaz.run
-  end
-
-  after :all do
-    Topaz.cleanup
-  end
-  # rubocop:enable RSpec/BeforeAfterAll
-
   let :directory do
     Aserto::Directory::V3::Client.new(
       {
