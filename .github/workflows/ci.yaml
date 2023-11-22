@@ -41,8 +41,6 @@ jobs:
 
       - name: Install topaz
         run: brew tap aserto-dev/tap && brew install aserto-dev/tap/topaz && topaz install
-      - name: Update ca
-        run: sudo update-ca-certificates
 
       - name: run RSpec
         run: bundle exec rake spec:all

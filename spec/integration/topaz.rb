@@ -5,14 +5,15 @@ require "timeout"
 class Topaz
   class << self
     # 2 minutes
-    ELAPSED = 2 * 60
+    WAIT_FOR_TOPAZ = 2 * 60
+    CERT_FILE = File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
+    DB_DIR = File.join(ENV.fetch("HOME", ""), ".config/topaz/db")
 
     def run
       stop
 
-      db_dir = File.join(ENV.fetch("HOME", ""), ".config/topaz/db")
-      if File.exist?(File.join(db_dir, "directory.db"))
-        File.rename(File.join(db_dir, "directory.db"), File.join(db_dir, "directory.bak"))
+      if File.exist?(File.join(DB_DIR, "directory.db"))
+        File.rename(File.join(DB_DIR, "directory.db"), File.join(DB_DIR, "directory.bak"))
       end
       configure
       start
@@ -21,27 +22,22 @@ class Topaz
     def start
       system "topaz start"
 
-      # elapse 2 minutes for topaz to start
-      final_time = Time.now + ELAPSED
+      Timeout.timeout(WAIT_FOR_TOPAZ) do
+        wait_for_certs
 
-      Timeout.timeout(60) do
-        trust_certs if ENV["TRUST_CERTIFICATES"]
-      end
+        client = Aserto::Directory::V3::Client.new(
+          {
+            url: "localhost:9292",
+            cert_path: CERT_FILE
+          }
+        )
 
-      client = Aserto::Directory::V3::Client.new(
-        {
-          url: "localhost:9292",
-          cert_path: File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
-        }
-      )
-      begin
         client.get_objects(object_type: "user")
       rescue GRPC::Unavailable => e
         puts e.message
-        puts "sleep 1"
-        sleep 1
+        puts "sleep 2"
+        sleep 2
         puts "retry..."
-        raise "Topaz did not start in #{ELAPSED} seconds " unless Time.now < final_time
 
         retry
       end
@@ -59,18 +55,13 @@ class Topaz
 
     def cleanup
       stop
-      db_dir = File.join(ENV.fetch("HOME", ""), ".config/topaz/db")
-      return unless File.exist?(File.join(db_dir, "directory.bak"))
+      return unless File.exist?(File.join(DB_DIR, "directory.bak"))
 
-      File.rename(File.join(db_dir, "directory.bak"), File.join(db_dir, "directory.db"))
+      File.rename(File.join(DB_DIR, "directory.bak"), File.join(DB_DIR, "directory.db"))
     end
 
-    def trust_certs
-      cert_file = File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
-      sleep(5) until File.exist?(cert_file)
-
-      system("sudo cp $HOME/.config/topaz/certs/grpc-ca.crt /usr/local/share/ca-certificates/")
-      system("sudo update-ca-certificates")
+    def wait_for_certs
+      sleep(2) until File.exist?(CERT_FILE)
     end
   end
 end
