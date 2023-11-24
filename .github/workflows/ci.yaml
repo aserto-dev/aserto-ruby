@@ -109,4 +109,4 @@ jobs:
           default_author: github_actions
           message: 'Bump to next version'
           add: 'VERSION'
-          push: origin HEAD:v2
+          push: origin HEAD:main
