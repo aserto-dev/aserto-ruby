@@ -5,10 +5,10 @@ module Aserto
     module V3
       module Exporter
         DATA_TYPE = {
-          unknown: 0x0,
-          objects: 0x8,
-          relations: 0x10,
-          all: 0x18
+          unknown: ::Aserto::Directory::Exporter::V3::Option::OPTION_UNKNOWN,
+          objects: ::Aserto::Directory::Exporter::V3::Option::OPTION_DATA_OBJECTS,
+          relations: ::Aserto::Directory::Exporter::V3::Option::OPTION_DATA_RELATIONS,
+          all: ::Aserto::Directory::Exporter::V3::Option::OPTION_DATA
         }.freeze
 
         #
