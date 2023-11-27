@@ -159,6 +159,39 @@ module Aserto
         end
 
         #
+        # Check relation between two objects
+        #
+        # @param [String] object_type
+        # @param [String] object_id
+        # @param [String] relation
+        # @param [String] subject_type
+        # @param [String] subject_id
+        # @param [Boolean] trace
+        #
+        # @return [Aserto::Directory::Reader::V3::CheckResponse]
+        #
+        # @example
+        #   client.check(
+        #     object_type: "user",
+        #     object_id: "rick@the-citadel.com",
+        #     relation: "member",
+        #     object_type: "group",
+        #     object_id: "evil_genius"
+        #   )
+        def check(object_type:, object_id:, relation:, subject_type:, subject_id:, trace: false)
+          reader.check(
+            Aserto::Directory::Reader::V3::CheckRequest.new(
+              object_type: object_type,
+              object_id: object_id,
+              relation: relation,
+              subject_type: subject_type,
+              subject_id: subject_id,
+              trace: trace
+            )
+          )
+        end
+
+        #
         # Check permission between two objects
         #
         # @param [String] object_type

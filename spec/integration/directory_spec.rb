@@ -114,6 +114,18 @@ describe "Directory", type: :integration do
     )
   end
 
+  it "checks an user and a group" do
+    expect(directory.check(
+      subject_id: "my-user",
+      subject_type: "user",
+      relation: "member",
+      object_id: "my-group",
+      object_type: "group"
+    ).to_h).to eq(
+      { check: true, trace: [] }
+    )
+  end
+
   it "checks a permission of an object" do
     expect(directory.check_permission(
       subject_id: "my-user",
