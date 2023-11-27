@@ -23,7 +23,7 @@ gem install aserto
 
 ## Directory
 
-The Directory APIs can be used to get or set object instances and relation instances. They can also be used to check whether a user has a permission or relation on an object instance.
+The Directory APIs can be used to get or set object instances and relation instances. They can also be used to check whether a user has permission or relation on an object instance.
 
 ### Directory Client
 
@@ -32,7 +32,7 @@ You can initialize a directory client as follows:
 ```ruby
 require 'aserto/directory/client'
 
-directory_client =Aserto::Directory::V3::Client.new(
+directory_client = Aserto::Directory::V3::Client.new(
   url: "directory.eng.aserto.com:8443",
   tenant_id: "aserto-tenant-id",
   api_key: "basic directory api key",
@@ -42,9 +42,9 @@ directory_client =Aserto::Directory::V3::Client.new(
 - `url`: hostname:port of directory service (_required_)
 - `api_key`: API key for directory service (_required_ if using hosted directory)
 - `tenant_id`: Aserto tenant ID (_required_ if using hosted directory)
-- `cert_path`: Path to the grpc service certificate when connecting to local topaz instance.
+- `cert_path`: Path to the grpc service certificate when connecting to the local topaz instance.
 
-See https://rubydoc.info/gems/aserto/docs/Aserto/Directory/V3/Client for full documentation
+See [Aserto::Directory::V3::Client](https://rubydoc.info/gems/aserto/Aserto/Directory/V3/Client) for full documentation
 
 ## Authorizer
 `Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
@@ -120,7 +120,7 @@ end
 By default, when computing the policy path, the middleware:
 * converts all slashes to dots
 * converts any character that is not alpha, digit, dot or underscore to underscore
-* converts uppercase characters in the URL path to lowercases
+* converts uppercase characters in the URL path to lowercase
 
 This behaviour can be overwritten by providing a custom function:
 
@@ -136,7 +136,7 @@ end
 ```
 
 ### Resource
-A resource can be any structured data that the authorization policy uses to evaluate decisions. By default, middleware does not include a resource in authorization calls.
+A resource can be any structured data the authorization policy uses to evaluate decisions. By default, middleware does not include a resource in authorization calls.
 
 This behaviour can be overwritten by providing a custom function:
 
