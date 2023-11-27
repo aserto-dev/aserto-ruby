@@ -13,6 +13,7 @@ module Aserto
     INTERNAL_MAPPING = {
       unknown: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_UNKNOWN,
       none: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_NONE,
+      manual: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_MANUAL,
       sub: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_SUB,
       jwt: Aserto::Authorizer::V2::Api::IdentityType::IDENTITY_TYPE_JWT
     }.freeze

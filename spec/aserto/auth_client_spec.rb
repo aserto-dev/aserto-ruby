@@ -152,6 +152,10 @@ describe Aserto::AuthClient do
       before do
         Aserto.configure do |config|
           config.decision = "visible"
+          config.identity_mapping = {
+            type: :manual,
+            value: "test"
+          }
         end
       end
 
