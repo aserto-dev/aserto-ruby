@@ -5,9 +5,6 @@ require "rspec"
 require "grpc_mock/rspec"
 require "rack"
 
-require "aserto"
-require "google/protobuf/well_known_types"
-
 require "simplecov"
 SimpleCov.start do
   enable_coverage :branch
@@ -25,12 +22,28 @@ RSpec.configure do |config|
 
   config.expose_dsl_globally = true
 
+  # integration tests setup
+  config.before(:all, type: :integration) do
+    require_relative "integration/topaz"
+
+    GrpcMock.allow_net_connect!
+    Topaz.run
+  end
+
+  config.after(:all, type: :integration) do
+    require_relative "integration/topaz"
+
+    GrpcMock.disable_net_connect!
+    Topaz.cleanup
+  end
+
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
 end
 
 # configure Aserto
+require "aserto"
 Aserto.configure do |config|
   config.policy_name = "peoplefinder"
   config.authorizer_api_key = "123456"

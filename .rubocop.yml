@@ -7,6 +7,7 @@ AllCops:
 require:
  - rubocop-rspec
  - rubocop-performance
+ - rubocop-rake
 
 Style/Documentation:
   Enabled: false
@@ -34,3 +35,6 @@ RSpec/ExampleLength:
 
 RSpec/NestedGroups:
   Max: 4
+
+Metrics/ParameterLists:
+  Enabled: false

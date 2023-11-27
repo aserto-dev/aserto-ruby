@@ -10,11 +10,31 @@ module Aserto
           super()
         end
 
-        def request_response(method:, request:, call:, metadata:)
+        def request_response(request: nil, call: nil, method: nil, metadata: nil)
+          update_metadata(metadata)
+          yield(request, call, method, metadata)
+        end
+
+        def bidi_streamer(requests: nil, call: nil, method: nil, metadata: nil)
+          update_metadata(metadata)
+          yield(requests, call, method, metadata)
+        end
+
+        def client_streamer(requests: nil, call: nil, method: nil, metadata: nil)
+          update_metadata(metadata)
+          yield(requests, call, method, metadata)
+        end
+
+        def server_streamer(request: nil, call: nil, method: nil, metadata: nil)
+          update_metadata(metadata)
+          yield(request, call, method, metadata)
+        end
+
+        private
+
+        def update_metadata(metadata)
           metadata["aserto-tenant-id"] = @tenant_id
           metadata["authorization"] = @api_key
-
-          yield(method, request, call, metadata)
         end
       end
     end
