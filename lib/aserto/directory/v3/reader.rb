@@ -223,6 +223,43 @@ module Aserto
             )
           )
         end
+
+        #
+        # Returns object graph from anchor to subject or object.
+        #
+        # @param [String] anchor_type <description>
+        # @param [String] anchor_id <description>
+        # @param [String] object_type <description>
+        # @param [String] object_id <description>
+        # @param [String] relation <description>
+        # @param [String] subject_type <description>
+        # @param [String] <description>
+        #
+        # @return [Aserto::Directory::Reader::V3::GetGraphResponse]
+        #
+        # @example
+        #   directory.get_graph(
+        #     anchor_type: "user",
+        #     anchor_id: "rick@the-citadel.com",
+        #     subject_id: "rick@the-citadel.com",
+        #     subject_type: "user",
+        #     relation: "member"
+        #   )
+        def get_graph(anchor_type:, anchor_id:, object_type: "", object_id: "", relation: "", subject_type: "",
+                      subject_id: "", subject_relation: "")
+          reader.get_graph(
+            Aserto::Directory::Reader::V3::GetGraphRequest.new(
+              anchor_type: anchor_type,
+              anchor_id: anchor_id,
+              object_type: object_type,
+              object_id: object_id,
+              relation: relation,
+              subject_type: subject_type,
+              subject_id: subject_id,
+              subject_relation: subject_relation
+            )
+          )
+        end
       end
     end
   end

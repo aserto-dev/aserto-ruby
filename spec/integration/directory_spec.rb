@@ -85,6 +85,28 @@ describe "Directory", type: :integration do
     end.not_to raise_error
   end
 
+  it "reads the graph between user and group" do
+    expect(directory.get_graph(
+      anchor_type: "user",
+      anchor_id: "my-user",
+      subject_id: "my-user",
+      subject_type: "user",
+      relation: "member"
+    ).results.map(&:to_h)).to eq(
+      [
+        { depth: 1,
+          is_cycle: false,
+          object_id: "my-group",
+          object_type: "group",
+          path: ["group:my-group|member|user:my-user#"],
+          relation: "member",
+          subject_id: "my-user",
+          subject_relation: "",
+          subject_type: "user" }
+      ]
+    )
+  end
+
   it "reads a relation between user and group" do
     expect(directory.get_relation(
       subject_id: "my-user",
