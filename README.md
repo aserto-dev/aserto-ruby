@@ -50,7 +50,7 @@ See [Aserto::Directory::V3::Client](https://rubydoc.info/gems/aserto/Aserto/Dire
 `Aserto::Authorization` is a middleware that allows Ruby applications to use Aserto as the Authorization provider.
 
 ### Prerequisites
-* [Ruby](https://www.ruby-lang.org/en/downloads/) 2.7 or newer.
+* [Ruby](https://www.ruby-lang.org/en/downloads/) 3.0 or newer.
 * An [Aserto](https://console.aserto.com) account.
 
 ### Configuration
@@ -244,7 +244,7 @@ end
 Prerequisites:
 
     - go >= 1.17 to run mage
-    - Ruby >= 2.7.0 to run the code
+    - Ruby >= 3.0 to run the code
 
 
  Run `bundle install` to install dependencies. Then, run `bundle exec rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
