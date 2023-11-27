@@ -33,7 +33,7 @@ module Aserto
       WARN_MESSAGE = <<~TEXT
         Aserto::Directory::Client is deprecated and will be removed.
         Use Aserto::Directory::V3::Client for the latest Directory Client.
-        If you still want to need Directory V2, use Aserto::Directory::V3::Client
+        If you need Directory V2, use Aserto::Directory::V2::Client
       TEXT
     end
   end
