@@ -3,6 +3,7 @@
 module Aserto
   class Error < StandardError; end
   class InvalidResourceMapping < Error; end
+  class InvalidIdentityType < Error; end
 
   class AccessDenied < Error
     attr_reader :action, :conditions

@@ -150,7 +150,7 @@ The middleware accepts the following optional parameters:
 | cert_path | `""` | Path to the grpc service certificate when connecting to local topaz instance. |
 | decision | `"allowed"` | The decision that will be used by the middleware when creating an authorizer request. |
 | logger | `STDOUT` | The logger to be used by the middleware. |
-| identity_mapping | `{ type: :none }` | The strategy for retrieving the identity, possible values: `:jwt, :sub, :none` |
+| identity_mapping | `{ type: :none }` | The strategy for retrieving the identity, possible values: `:jwt, :sub, :manual, :none` |
 | disabled_for | `[{}]` | Which path and actions to skip the authorization for. |
 | on_unauthorized | `-> { return [403, {}, ["Forbidden"]] }`| A lambda that is executed when the authorization fails. |
 
@@ -169,6 +169,14 @@ config.identity_mapping = {
 config.identity_mapping = {
   type: :sub,
   from: :sub,
+}
+```
+
+```ruby
+# configure the middleware to use a manual identity.
+config.identity_mapping = {
+  type: :manual,
+  value: "my-identity",
 }
 ```
 
