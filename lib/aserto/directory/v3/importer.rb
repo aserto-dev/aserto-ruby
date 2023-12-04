@@ -12,12 +12,12 @@ module Aserto
         # @example
         #   directory.import(
         #     [
-        #       { object: { id: "import-user", type: "user" } },
-        #       { object: { id: "import-group", type: "group" } },
+        #       { object: { type: "user", id: "import-user" } },
+        #       { object: { type: "group", id: "import-group" } },
         #       {
         #         relation: {
-        #           object_id: "import-user",
         #           object_type: "user",
+        #           object_id: "import-user",
         #           relation: "member",
         #           subject_id: "import-group",
         #           subject_type: "group"
