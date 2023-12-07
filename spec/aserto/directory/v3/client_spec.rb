@@ -27,12 +27,12 @@ describe Aserto::Directory::V3::Client do
         ).to eql("reader.com")
       end
 
-      it "provides an informative error message if the client is missing" do
+      it "throws ConfigError if the client is missing" do
         client = described_class.new({})
 
         expect do
           client.get_object(object_id: "1234", object_type: "object")
-        end.to output("Cannot call 'get_object': 'Reader' client is not initialized.\n").to_stdout
+        end.to raise_error(ConfigError, "Cannot call 'get_object': 'Reader' client is not initialized.")
       end
     end
 
@@ -42,7 +42,7 @@ describe Aserto::Directory::V3::Client do
       it "provides an informative error message for writer" do
         expect do
           client.set_object(object_id: "1234", object_type: "object")
-        end.to output("Cannot call 'set_object': 'Writer' client is not initialized.\n").to_stdout
+        end.to raise_error(ConfigError, "Cannot call 'set_object': 'Writer' client is not initialized.")
       end
 
       it "creates the requested service object" do

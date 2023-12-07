@@ -8,6 +8,7 @@ require_relative "writer"
 require_relative "model"
 require_relative "importer"
 require_relative "exporter"
+require_relative "../errors"
 
 module Aserto
   module Directory
@@ -77,7 +78,7 @@ module Aserto
           end
 
           def method_missing(method, *_args)
-            puts "Cannot call '#{method}': '#{@name.to_s.capitalize}' client is not initialized."
+            raise ConfigError, "Cannot call '#{method}': '#{@name.to_s.capitalize}' client is not initialized."
           end
 
           def respond_to_missing?(_name, _include_private)
