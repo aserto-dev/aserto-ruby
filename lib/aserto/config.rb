@@ -40,7 +40,7 @@ module Aserto
       policy_root: "",
       cert_path: "",
       on_unauthorized: lambda do |_env|
-        return [403, {}, ["Forbidden"]]
+        [403, {}, ["Forbidden"]]
       end
     }.freeze
 

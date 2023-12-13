@@ -7,8 +7,8 @@ module Aserto
         #
         # find an object by id and type
         #
-        # @param object_id [String]
         # @param object_type [String]
+        # @param object_id [String]
         #
         # @return [Aserto::Directory::Reader::V3::GetObjectResponse]
         #
@@ -17,11 +17,11 @@ module Aserto
         #     object_type: "user",
         #     object_id: "rick@the-citadel.com"
         #   )
-        def get_object(object_id:, object_type:)
+        def get_object(object_type:, object_id:)
           reader.get_object(
             Aserto::Directory::Reader::V3::GetObjectRequest.new(
-              object_id: object_id,
-              object_type: object_type
+              object_type: object_type,
+              object_id: object_id
             )
           )
         end
@@ -227,13 +227,13 @@ module Aserto
         #
         # Returns object graph from anchor to subject or object.
         #
-        # @param [String] anchor_type <description>
-        # @param [String] anchor_id <description>
-        # @param [String] object_type <description>
-        # @param [String] object_id <description>
-        # @param [String] relation <description>
-        # @param [String] subject_type <description>
-        # @param [String] <description>
+        # @param [String] anchor_type
+        # @param [String] anchor_id
+        # @param [String] object_type
+        # @param [String] object_id
+        # @param [String] relation
+        # @param [String] subject_type
+        # @param [String]
         #
         # @return [Aserto::Directory::Reader::V3::GetGraphResponse]
         #

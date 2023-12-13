@@ -5,7 +5,10 @@ describe "Directory", type: :integration do
     Aserto::Directory::V3::Client.new(
       {
         url: "localhost:9292",
-        cert_path: File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
+        cert_path: File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt"),
+        writer: {
+          url: "localhost:9292"
+        }
       }
     )
   end

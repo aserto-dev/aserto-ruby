@@ -10,7 +10,7 @@ module Aserto
 
         def initialize(config)
           @base = {
-            url: config[:url] || "directory.prod.aserto.com:8443",
+            url: config[:url],
             api_key: config[:api_key],
             tenant_id: config[:tenant_id],
             cert_path: config[:cert_path]
@@ -28,6 +28,8 @@ module Aserto
         class BaseConfig
           attr_reader :url, :credentials, :interceptors
 
+          DEFAULT_DIRECTORY_URL = "directory.prod.aserto.com:8443"
+
           def initialize(url, credentials, interceptors)
             @url = url
             @credentials = credentials
@@ -35,16 +37,21 @@ module Aserto
           end
         end
 
-        def build(
-          url: @base[:url],
-          api_key: @base[:api_key],
-          tenant_id: @base[:tenant_id],
-          cert_path: @base[:cert_path]
-        )
+        def build(url: nil, api_key: @base[:api_key], tenant_id: @base[:tenant_id], cert_path: @base[:cert_path])
+          return unless valid_config?(@base, { url: url, api_key: api_key, tenant_id: tenant_id })
 
-          interceptors = []
           interceptors = [Interceptors::Headers.new(api_key, tenant_id)] if !api_key.nil? && !tenant_id.nil?
-          BaseConfig.new(url, load_creds(cert_path), interceptors)
+          BaseConfig.new(
+            url || @base[:url] || BaseConfig::DEFAULT_DIRECTORY_URL,
+            load_creds(cert_path),
+            interceptors || []
+          )
+        end
+
+        def valid_config?(config, fallback)
+          !(config[:url].nil? && fallback[:url].nil?) ||
+            ((!config[:api_key].nil? || !fallback[:api_key].nil?) &&
+            (!config[:tenant_id].nil? || !fallback[:tenant_id].nil?))
         end
 
         def load_creds(cert_path)

@@ -9,8 +9,8 @@ module Aserto
         #
         # Create a new object
         #
-        # @param [String] object_id
         # @param [String] object_type
+        # @param [String] object_id
         # @param [String] display_name
         # @param [Hash] properties
         # @param [String] etag
@@ -18,13 +18,13 @@ module Aserto
         # @return [Aserto::Directory::Writer::V3::SetObjectResponse]
         #
         # @example
-        #   client.set_object(object_id: "1234", object_type: "user", properties: { email: "test" })
-        def set_object(object_id:, object_type:, display_name: "", properties: {}, etag: nil)
+        #   client.set_object(object_type: "user", object_id: "1234", properties: { email: "test" })
+        def set_object(object_type:, object_id:, display_name: "", properties: {}, etag: nil)
           writer.set_object(
             Aserto::Directory::Writer::V3::SetObjectRequest.new(
               object: {
-                id: object_id,
                 type: object_type,
+                id: object_id,
                 display_name: display_name,
                 properties: Google::Protobuf::Struct.from_hash(properties.transform_keys!(&:to_s)),
                 etag: etag
@@ -36,19 +36,19 @@ module Aserto
         #
         # Delete an object
         #
-        # @param [String] object_id
         # @param [String] object_type
+        # @param [String] object_id
         # @param [Boolean] with_relations
         #
         # @return [ Aserto::Directory::Writer::V3::DeleteObjectResponse]
         #
         # @example
-        #   client.delete_object(object_id: "1234", object_type: "user")
-        def delete_object(object_id:, object_type:, with_relations: false)
+        #   client.delete_object(object_type: "user", object_id: "1234")
+        def delete_object(object_type:, object_id:, with_relations: false)
           writer.delete_object(
             Aserto::Directory::Writer::V3::DeleteObjectRequest.new(
-              object_id: object_id,
               object_type: object_type,
+              object_id: object_id,
               with_relations: with_relations
             )
           )
