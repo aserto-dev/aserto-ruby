@@ -56,7 +56,7 @@ class Topaz
     end
 
     def configure
-      system "topaz configure -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d"
+      system "topaz configure -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d -f"
     end
 
     def cleanup

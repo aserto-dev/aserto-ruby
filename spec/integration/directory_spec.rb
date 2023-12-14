@@ -250,9 +250,11 @@ describe "Directory", type: :integration do
     expect do
       directory.import(
         [
-          { object: { id: "import-user", type: "user" } },
-          { object: { id: "import-group", type: "group" } },
+
+          { op_code: 1, object: { id: "import-user", type: "user" } },
+          { op_code: 1, object: { id: "import-group", type: "group" } },
           {
+            op_code: 1,
             relation: {
               subject_id: "import-user",
               subject_type: "user",
