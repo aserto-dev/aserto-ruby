@@ -9,12 +9,18 @@ module Aserto
         #
         # @param Array[Hash] data to be imported
         #
+        # op_code = {
+        #   OPCODE_UNKNOWN                                              = ;
+        #   OPCODE_SET                                                  = 1;
+        #   OPCODE_DELETE                                               = 2;
+        # }
         # @example
         #   directory.import(
         #     [
-        #       { object: { type: "user", id: "import-user" } },
-        #       { object: { type: "group", id: "import-group" } },
+        #       { op_code: 1, object: { type: "user", id: "import-user" } },
+        #       { op_code: 1, object: { type: "group", id: "import-group" } },
         #       {
+        #         op_code: 1,
         #         relation: {
         #           object_type: "user",
         #           object_id: "import-user",
