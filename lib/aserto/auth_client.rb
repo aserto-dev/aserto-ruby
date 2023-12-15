@@ -33,7 +33,7 @@ module Aserto
       exec_is(request_is(config.decision))
     end
 
-    def check(object_id: "", object_type: "", relation: "")
+    def check(object_id:, object_type:, relation:)
       resource_context_fields = {
         object_id: object_id,
         object_type: object_type,
