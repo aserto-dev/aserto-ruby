@@ -56,7 +56,7 @@ module Aserto
 
     def initialize(options)
       OPTIONS.each do |key|
-        send("#{key}=", options[key] || DEFAULT_ATTRS[key])
+        send(:"#{key}=", options[key] || DEFAULT_ATTRS[key])
       end
     end
   end

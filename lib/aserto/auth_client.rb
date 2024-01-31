@@ -33,21 +33,27 @@ module Aserto
       exec_is(request_is(config.decision))
     end
 
-    def check(object_id:, object_type:, relation:)
+    def check(object_id:, object_type:, relation:, options: {})
       resource_context_fields = {
         object_id: object_id,
         object_type: object_type,
         relation: relation
-      }.merge!(resource_context.to_h)
+      }
 
       check_resource_context = Google::Protobuf::Struct
                                .from_hash(resource_context_fields.transform_keys!(&:to_s))
+
+      policy_path = if options[:policy_path]
+                      options[:policy_path]
+                    else
+                      config.policy_root ? "#{config.policy_root}.check" : "rebac.check"
+                    end
 
       request = Aserto::Authorizer::V2::IsRequest.new(
         {
           policy_context: Aserto::Authorizer::V2::Api::PolicyContext.new(
             {
-              path: config.policy_root ? "#{config.policy_root}.check" : "rebac.check",
+              path: policy_path,
               decisions: [config.decision]
             }
           ),

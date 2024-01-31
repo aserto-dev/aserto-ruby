@@ -23,7 +23,7 @@ module Aserto
 
     def inspect
       details = %i[action conditions message].filter_map do |attribute|
-        value = instance_variable_get "@#{attribute}"
+        value = instance_variable_get :"@#{attribute}"
         "#{attribute}: #{value.inspect}" if value.present?
       end.join(", ")
       "#<#{self.class.name} #{details}>"
