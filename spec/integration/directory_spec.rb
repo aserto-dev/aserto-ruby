@@ -92,12 +92,22 @@ describe "Directory", type: :integration do
     expect(directory.get_graph(
       object_type: "group",
       object_id: "my-group",
-      subject_id: "my-user",
+      subject_type: "user",
+      relation: "member"
+    ).results.map(&:to_h)).to eq(
+      [{ object_id: "my-user", object_type: "user" }]
+    )
+  end
+
+  it "reads the graph explanation between user and group" do
+    expect(directory.get_graph(
+      object_type: "group",
+      object_id: "my-group",
       subject_type: "user",
       relation: "member",
       explain: true
-    ).results.map(&:to_h)).to eq(
-      [{ object_id: "my-user", object_type: "user" }]
+    ).explanation.to_h).to eq(
+      { "user:my-user" => [["group:my-group#member@user:my-user"]] }
     )
   end
 
