@@ -90,8 +90,8 @@ describe "Directory", type: :integration do
 
   it "reads the graph between user and group" do
     expect(directory.get_graph(
-      anchor_type: "user",
-      anchor_id: "my-user",
+      object_type: "user",
+      object_id: "my-user",
       subject_id: "my-user",
       subject_type: "user",
       relation: "member"
