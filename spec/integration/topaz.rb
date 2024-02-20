@@ -26,7 +26,7 @@ class Topaz
     end
 
     def start
-      system "topaz start"
+      system "topaz start --container-version=model-v2.3"
 
       Timeout.timeout(WAIT_FOR_TOPAZ) do
         wait_for_certs
