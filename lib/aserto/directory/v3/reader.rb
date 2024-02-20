@@ -243,7 +243,7 @@ module Aserto
         #     subject_type: "user",
         #     relation: "member"
         #   )
-        def get_graph(object_type:, object_id: "", relation:, subject_type:,
+        def get_graph(object_type:, relation:, subject_type:, object_id: "",
                       subject_id: "", subject_relation: "")
           reader.get_graph(
             Aserto::Directory::Reader::V3::GetGraphRequest.new(
