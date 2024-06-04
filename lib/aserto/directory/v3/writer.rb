@@ -62,6 +62,7 @@ module Aserto
         # @param [String] relation
         # @param [String] subject_type
         # @param [String] subject_id
+        # @param [String] subject_relation
         #
         # @return [Aserto::Directory::Writer::V3::SetRelationResponse]
         #
@@ -70,10 +71,10 @@ module Aserto
         #     object_type: "user",
         #     object_id: "rick@the-citadel.com",
         #     relation: "member",
-        #     object_type: "group",
-        #     object_id: "evil_genius"
+        #     subject_type: "group",
+        #     subject_id: "evil_genius"
         #   )
-        def set_relation(object_type:, object_id:, relation:, subject_type:, subject_id:)
+        def set_relation(object_type:, object_id:, relation:, subject_type:, subject_id:, subject_relation: "")
           writer.set_relation(
             Aserto::Directory::Writer::V3::SetRelationRequest.new(
               relation: {
@@ -81,7 +82,8 @@ module Aserto
                 object_id: object_id,
                 relation: relation,
                 subject_type: subject_type,
-                subject_id: subject_id
+                subject_id: subject_id,
+                subject_relation: subject_relation
               }
             )
           )

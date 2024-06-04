@@ -6,19 +6,16 @@ class Topaz
   class << self
     # 2 minutes
     WAIT_FOR_TOPAZ = 2 * 60
-    CERT_FILE = File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt")
-    DB_DIR = File.join(ENV.fetch("HOME", ""), ".config/topaz/db")
-    CONFIG_DIR = File.join(ENV.fetch("HOME", ""), ".config/topaz/cfg")
 
     def run
       stop
 
-      if File.exist?(File.join(DB_DIR, "directory.db"))
-        File.rename(File.join(DB_DIR, "directory.db"), File.join(DB_DIR, "directory.bak"))
+      if File.exist?(File.join(db_dir, "todo.db"))
+        File.rename(File.join(db_dir, "todo.db"), File.join(db_dir, "todo.bak"))
       end
 
-      if File.exist?(File.join(CONFIG_DIR, "config.yaml"))
-        File.rename(File.join(CONFIG_DIR, "config.yaml"), File.join(CONFIG_DIR, "config.bak"))
+      if File.exist?(File.join(config_dir, "todo.yaml"))
+        File.rename(File.join(config_dir, "todo.yaml"), File.join(config_dir, "todo.bak"))
       end
 
       configure
@@ -34,7 +31,7 @@ class Topaz
         client = Aserto::Directory::V3::Client.new(
           {
             url: "localhost:9292",
-            cert_path: CERT_FILE
+            cert_path: cert_file
           }
         )
 
@@ -56,22 +53,44 @@ class Topaz
     end
 
     def configure
-      system "topaz configure -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d -f"
+      system "topaz config new -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d -f"
+      system "topaz config use todo"
     end
 
     def cleanup
       stop
-      if File.exist?(File.join(DB_DIR, "directory.bak"))
-        File.rename(File.join(DB_DIR, "directory.bak"), File.join(DB_DIR, "directory.db"))
+      if File.exist?(File.join(db_dir, "todo.bak"))
+        File.rename(File.join(db_dir, "todo.bak"), File.join(db_dir, "todo.db"))
       end
 
-      return unless File.exist?(File.join(CONFIG_DIR, "config.bak"))
+      return unless File.exist?(File.join(config_dir, "todo.bak"))
 
-      File.rename(File.join(CONFIG_DIR, "config.bak"), File.join(CONFIG_DIR, "config.yaml"))
+      File.rename(File.join(config_dir, "todo.bak"), File.join(config_dir, "todo.yaml"))
     end
 
     def wait_for_certs
-      sleep(2) until File.exist?(CERT_FILE)
+      sleep(2) until File.exist?(cert_file)
+    end
+
+    def config
+      require "json"
+
+      @config ||= JSON.parse(`topaz config info`)
+      @config["config"] || {}
+    rescue StandardError
+      {}
+    end
+
+    def cert_file
+      File.join(config.fetch("topaz_certs_dir"), "grpc-ca.crt")
+    end
+
+    def config_dir
+      config.fetch("topaz_cfg_dir")
+    end
+
+    def db_dir
+      config.fetch("topaz_db_dir")
     end
   end
 end
