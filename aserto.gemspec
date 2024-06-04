@@ -31,8 +31,8 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
 
   # runtime dependencies
-  spec.add_runtime_dependency "aserto-authorizer", ">= 0.20.1"
-  spec.add_runtime_dependency "aserto-directory",  ">= 0.31.0"
+  spec.add_runtime_dependency "aserto-authorizer", ">= 0.20.2"
+  spec.add_runtime_dependency "aserto-directory",  ">= 0.31.3"
   spec.add_runtime_dependency "jwt", "~> 2.4"
   spec.add_runtime_dependency "rack", "~> 2.0"
 end

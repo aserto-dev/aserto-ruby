@@ -17,14 +17,13 @@ module Aserto
         # @param [String] data_type one of [:unknown, :objects, :relations, :all]
         #
         def export(data_type: :unknown)
-          data = []
           operation = exporter.export(
             Aserto::Directory::Exporter::V3::ExportRequest.new(options: DATA_TYPE[data_type]),
             return_op: true
           )
 
           response = operation.execute
-          response.each { |r| data.push(r) }
+          data = response.map { |r| r }
           operation.wait
 
           data

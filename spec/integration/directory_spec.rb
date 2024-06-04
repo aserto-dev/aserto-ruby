@@ -5,7 +5,7 @@ describe "Directory", type: :integration do
     Aserto::Directory::V3::Client.new(
       {
         url: "localhost:9292",
-        cert_path: File.join(ENV.fetch("HOME", ""), ".config/topaz/certs/grpc-ca.crt"),
+        cert_path: Topaz.cert_file,
         writer: {
           url: "localhost:9292"
         }
@@ -43,10 +43,21 @@ describe "Directory", type: :integration do
         ### display_name: Group ###
         group:
           relations:
-            ### display_name: group#member ###
-            member: user
+            member: user | group#member
           permissions:
             read: member
+
+        # resource represents a protected resource
+        resource:
+          relations:
+            owner: user
+            writer: user | group#member
+            reader: user | group#member
+
+          permissions:
+            can_read: reader | writer | owner
+            can_write: writer | owner
+            can_delete: owner
     YAML
   end
 
@@ -339,5 +350,26 @@ describe "Directory", type: :integration do
         object_type: "group"
       )
     end.to raise_error(GRPC::NotFound)
+  end
+
+  it "creates a resource object" do
+    expect { directory.set_object(object_id: "resource", object_type: "resource") }.not_to raise_error
+  end
+
+  it "creates a group object" do
+    expect { directory.set_object(object_id: "admin", object_type: "group") }.not_to raise_error
+  end
+
+  it "creates a relation(subject) between a group and a resource" do
+    expect do
+      directory.set_relation(
+        object_type: "resource",
+        object_id: "resource",
+        relation: "writer",
+        subject_type: "group",
+        subject_id: "admin",
+        subject_relation: "member"
+      )
+    end.not_to raise_error
   end
 end
