@@ -30,6 +30,12 @@ module Aserto
         end
 
         # rubocop:enable Naming/AccessorMethodName
+
+        # Deletes the manifest and all the data
+        # @return [Aserto::Directory::Model::V3::DeleteManifestResponse]
+        def delete_manifest
+          @model.delete_manifest(Model::V3::DeleteManifestRequest.new)
+        end
       end
     end
   end

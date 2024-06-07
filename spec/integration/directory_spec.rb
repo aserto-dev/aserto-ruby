@@ -61,6 +61,16 @@ describe "Directory", type: :integration do
     YAML
   end
 
+  it "deletes the manifest" do
+    expect do
+      directory.delete_manifest
+    end.not_to raise_error
+  end
+
+  it "reads the empty manifest" do
+    expect(directory.get_manifest.to_h[:body]).to be_nil
+  end
+
   it "sets the manifest" do
     expect do
       directory.set_manifest(manifest)
