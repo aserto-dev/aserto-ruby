@@ -272,7 +272,8 @@ describe "Directory", type: :integration do
       directory.import(
         [
 
-          { op_code: 1, object: { id: "import-user", type: "user" } },
+          { op_code: 1, object: { id: "import-user", type: "user", properties: { email: "test@email.com" } } },
+          { op_code: 1, object: { id: "import-user2", type: "user" } },
           { op_code: 1, object: { id: "import-group", type: "group" } },
           {
             op_code: 1,
@@ -289,8 +290,37 @@ describe "Directory", type: :integration do
     end.not_to raise_error
   end
 
+  it "imports delete object" do
+    expect do
+      directory.import(
+        [
+          { op_code: 2, object: { id: "import-user2", type: "user" } }
+
+        ]
+      )
+    end.not_to raise_error
+  end
+
+  it "raises error when getting a deleted object after import" do
+    expect do
+      directory.get_object(
+        object_type: "user",
+        object_id: "import-user2"
+      )
+    end.to raise_error(GRPC::NotFound)
+  end
+
   it "exports objects" do
     expect(directory.export(data_type: :objects).length).to eq(2)
+  end
+
+  it "gets object properties" do
+    user = directory.get_object(
+      object_type: "user",
+      object_id: "import-user"
+    ).result
+
+    expect(user.properties.to_h).to eq({ "email" => "test@email.com" })
   end
 
   it "exports relations" do
@@ -332,7 +362,7 @@ describe "Directory", type: :integration do
     end.not_to raise_error
   end
 
-  it "raises error when getting a deleted object after import" do
+  it "raises error when getting a deleted object after" do
     expect do
       directory.get_object(
         object_type: "user",
