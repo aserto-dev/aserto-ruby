@@ -33,6 +33,14 @@ module Aserto
         #   )
         def import(data)
           data.map! do |value|
+            if value.dig(:object, :properties)
+              require "google/protobuf/well_known_types"
+
+              value[:object][:properties] = Google::Protobuf::Struct.from_hash(
+                value[:object][:properties].transform_keys(&:to_s)
+              )
+            end
+
             Aserto::Directory::Importer::V3::ImportRequest.new(value)
           end
           operation = importer.import(data, return_op: true)
