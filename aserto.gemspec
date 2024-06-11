@@ -34,5 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "aserto-authorizer", ">= 0.20.2"
   spec.add_runtime_dependency "aserto-directory",  ">= 0.31.3"
   spec.add_runtime_dependency "jwt", "~> 2.4"
-  spec.add_runtime_dependency "rack", "~> 2.0"
+  spec.add_runtime_dependency "rack", ">= 2.0", "< 4.0"
 end
