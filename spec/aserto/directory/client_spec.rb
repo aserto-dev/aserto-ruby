@@ -17,13 +17,9 @@ describe Aserto::Directory::Client do
     it "returns the correct object" do
       expect(client.object(type: "type", key: "key").to_h).to eq(
         {
-          created_at: nil,
           display_name: "display_name",
-          hash: "",
           key: "key",
-          properties: nil,
-          type: "type",
-          updated_at: nil
+          type: "type"
         }
       )
     end
