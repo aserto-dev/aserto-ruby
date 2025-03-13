@@ -76,16 +76,10 @@ describe Aserto::Directory::V3::Client do
         ).to_h).to eq(
           {
             result: {
-              created_at: nil,
               display_name: "display_name",
-              etag: "",
               id: "id",
-              properties: nil,
-              type: "type",
-              updated_at: nil
-            },
-            relations: [],
-            page: nil
+              type: "type"
+            }
           }
         )
       end

@@ -144,8 +144,7 @@ describe "Directory", type: :integration do
         subject_type: "user",
         relation: "member",
         object_id: "my-group",
-        object_type: "group",
-        subject_relation: "" }
+        object_type: "group" }
     )
   end
 
@@ -157,7 +156,7 @@ describe "Directory", type: :integration do
       object_id: "my-group",
       object_type: "group"
     ).to_h).to eq(
-      { check: true, trace: [] }
+      { check: true }
     )
   end
 
@@ -169,7 +168,7 @@ describe "Directory", type: :integration do
       object_id: "my-group",
       object_type: "group"
     ).to_h).to eq(
-      { check: true, trace: [] }
+      { check: true, context: {} }
     )
   end
 
@@ -181,7 +180,7 @@ describe "Directory", type: :integration do
       object_id: "my-group",
       object_type: "group"
     ).to_h).to eq(
-      { check: true, trace: [] }
+      { check: true }
     )
   end
 
@@ -195,8 +194,7 @@ describe "Directory", type: :integration do
         subject_type: "user",
         relation: "member",
         object_id: "my-group",
-        object_type: "group",
-        subject_relation: ""
+        object_type: "group"
       }
     )
   end

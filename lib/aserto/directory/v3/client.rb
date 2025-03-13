@@ -68,6 +68,16 @@ module Aserto
           @model = create_client(:model, base_config.model)
         end
 
+        SERVICE_MAP = {
+          reader: ::Aserto::Directory::Reader::V3::Reader::Stub,
+          writer: ::Aserto::Directory::Writer::V3::Writer::Stub,
+          importer: ::Aserto::Directory::Importer::V3::Importer::Stub,
+          exporter: ::Aserto::Directory::Exporter::V3::Exporter::Stub,
+          model: ::Aserto::Directory::Model::V3::Model::Stub
+        }.freeze
+
+        private_constant :SERVICE_MAP
+
         private
 
         attr_reader :reader, :writer, :model, :importer, :exporter
@@ -85,14 +95,6 @@ module Aserto
             true
           end
         end
-
-        SERVICE_MAP = {
-          reader: ::Aserto::Directory::Reader::V3::Reader::Stub,
-          writer: ::Aserto::Directory::Writer::V3::Writer::Stub,
-          importer: ::Aserto::Directory::Importer::V3::Importer::Stub,
-          exporter: ::Aserto::Directory::Exporter::V3::Exporter::Stub,
-          model: ::Aserto::Directory::Model::V3::Model::Stub
-        }.freeze
 
         def create_client(type, config)
           return NullClient.new(type) unless config

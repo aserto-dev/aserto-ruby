@@ -53,8 +53,7 @@ class Topaz
     end
 
     def configure
-      system "topaz config new -r ghcr.io/aserto-policies/policy-todo:2.1.0 -n todo -d -f"
-      system "topaz config use todo"
+      system "topaz templates install todo -f --no-console -i"
     end
 
     def cleanup

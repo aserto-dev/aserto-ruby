@@ -21,7 +21,7 @@ module Aserto
           path = route[:path] if route
         end
 
-        policy_path = +"#{policy_root}.#{method}.#{path}"
+        policy_path = "#{policy_root}.#{method}.#{path}"
         policy_path.tr!("/", ".")
         policy_path.gsub!("..", ".")
         policy_path.gsub!(":", "__")
