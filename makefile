@@ -30,7 +30,7 @@ build:
 .PHONY: bump-version
 bump-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/svu patch --prefix="" > ./VERSION
+	@${EXT_BIN_DIR}/svu patch > ./VERSION
 
 .PHONY: push
 push:
