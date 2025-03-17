@@ -51,7 +51,8 @@ jobs:
 
     name: Release to rubygems
     steps:
-      - name: Read Configuration
+      -
+        name: Read Configuration
         uses: hashicorp/vault-action@v3
         id: vault
         with:
@@ -59,28 +60,36 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/rubygems  "RUBYGEMS_API_KEY" | GEM_HOST_API_KEY;
-
-      - name: Checkout
+            kv/data/github    "USERNAME"          | GH_USERNAME;
+            kv/data/github    "READ_WRITE_TOKEN"  | GH_TOKEN;
+      -
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.CODEGEN_APP_ID }}
+          private-key: ${{ secrets.CODEGEN_APP_KEY }}
+      -
+        name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-
-      - name: Install dependencies
+          token: ${{ steps.app-token.outputs.token }}
+      -
+        name: Install dependencies
         run: make deps
-
-      - name: Set up Ruby
+      -
+        name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3
-
-      - name: Build and push the gem
+      -
+        name: Build and push the gem
         run: make release
-
-      - name: Bump to the next version
+      -
+        name: Bump to the next version
         run: make bump-version
-
-      - name: Commit changes
+      -
+        name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
