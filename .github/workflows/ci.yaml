@@ -62,18 +62,18 @@ jobs:
             kv/data/rubygems  "RUBYGEMS_API_KEY" | GEM_HOST_API_KEY;
             kv/data/github    "USERNAME"          | GH_USERNAME;
             kv/data/github    "READ_WRITE_TOKEN"  | GH_TOKEN;
-      # -
-      #   uses: actions/create-github-app-token@v1
-      #   id: app-token
-      #   with:
-      #     app-id: ${{ vars.CODEGEN_APP_ID }}
-      #     private-key: ${{ secrets.CODEGEN_APP_KEY }}
+      -
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.CODEGEN_APP_ID }}
+          private-key: ${{ secrets.CODEGEN_APP_KEY }}
       -
         name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }}
       -
         name: Install dependencies
         run: make deps
